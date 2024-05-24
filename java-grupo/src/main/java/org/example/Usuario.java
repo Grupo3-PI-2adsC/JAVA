@@ -1,14 +1,14 @@
 package org.example;
 
 public class Usuario {
-    private int id;
+    private Integer id;
     private String tipo;
     private String nome;
     private String email;
     private String senha;
-    private int fkEmpresa;
+    private Integer Empresa;
 
-    public Usuario(int id, String tipo, String nome, String email, String senha, int fkEmpresa) {
+    public Usuario(Integer id, String tipo, String nome, String email, String senha, Integer fkEmpresa) {
         this.id = id;
         this.tipo = tipo;
         this.nome = nome;
@@ -17,7 +17,7 @@ public class Usuario {
         this.fkEmpresa = fkEmpresa;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -37,7 +37,7 @@ public class Usuario {
         return senha;
     }
 
-    public int getFkEmpresa() {
+    public Integer getFkEmpresa() {
         return fkEmpresa;
     }
 
