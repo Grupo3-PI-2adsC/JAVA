@@ -14,6 +14,9 @@ import java.util.List;
 import java.sql.Driver;
 public class Conexao {
     private JdbcTemplate conexaoDoBanco;
+    private String url;
+    private String username;
+    private String password;
 
     public JdbcTemplate getConexaoDoBanco() {
         return conexaoDoBanco;
