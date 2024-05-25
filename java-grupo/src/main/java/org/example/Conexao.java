@@ -27,9 +27,9 @@ public class Conexao {
     public Conexao() {
         BasicDataSource dataSource = new BasicDataSource();
 
-        String url = "jdbc:mysql://localhost:3306/netmed";
-        String username = "root";
-        String password = "Matt@123";
+        url = "jdbc:mysql://localhost:3306/netmed";
+        username = "root";
+        password = "Matt@123";
         /*
              Exemplo de driverClassName:
                 com.mysql.cj.jdbc.Driver <- EXEMPLO PARA MYSQL

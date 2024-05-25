@@ -191,19 +191,19 @@ public class Computador {
 
 
         Looca looca = new Looca();
-
-//        SISTEMA
-        String tempoAtividadeSistema = Conversor.formatarSegundosDecorridos(looca.getSistema().getTempoDeAtividade());
-
-        var querySistema = """
-                    iNSERT INTO dadosTempoReal VALUES  (null, %d, 1, current_timestamp(),'tempoAtividade', '%s');
-                           """.formatted(
-                                   idMaquina,
-                tempoAtividadeSistema
-        );
-
-        con.executarQuery(querySistema);
-
+//
+////        SISTEMA
+//        String tempoAtividadeSistema = Conversor.formatarSegundosDecorridos(looca.getSistema().getTempoDeAtividade());
+//
+//        var querySistema = """
+//                    iNSERT INTO dadosTempoReal VALUES  (null, %d, 1, current_timestamp(),'tempoAtividade', '%s');
+//                           """.formatted(
+//                                   idMaquina,
+//                tempoAtividadeSistema
+//        );
+//
+//        con.executarQuery(querySistema);
+//
 
 //        MEMORIA
         Long emUsoMemoria = (looca.getMemoria().getEmUso() / 1000000000);
@@ -315,6 +315,7 @@ public class Computador {
 
 //            Processador
         String nomeProcessador = looca.getProcessador().getNome();
+        String potenciaProcessador = nomeProcessador.substring(nomeProcessador.indexOf("@") + 2, nomeProcessador.lastIndexOf("G"));
         Integer nmrPacotesFisicosProcessador = looca.getProcessador().getNumeroPacotesFisicos();
         Integer nmrCpusFisicosProcessador = looca.getProcessador().getNumeroCpusFisicas();
         Integer nmrCpusLogicasProcessador = looca.getProcessador().getNumeroCpusLogicas();
@@ -323,11 +324,14 @@ public class Computador {
                         INSERT INTO componentes VALUES
                                                 (4, %d, 3, 'nome', '%s', 'Nome do Processador'),
                                                 (5, %d, 3, 'nmrPacotesFisicos', '%s', 'Numero de pacotes físicos do processador'),
-                                                (6, %d, 3, 'nmrCpusFisicos', '%s', 'Numero de CPUs físicas do processador'),
-                                                (7, %d, 3, 'nmrCpusLogicas', '%s', 'Numero de CPUs Logicas do processador')
+                                                (7, %d, 3, 'potencia', '%s', 'Potencia do processador'),
+                                                (8, %d, 3, 'nmrCpusFisicos', '%s', 'Numero de CPUs físicas do processador'),
+                                                (9, %d, 3, 'nmrCpusLogicas', '%s', 'Numero de CPUs Logicas do processador')
                     """.formatted(
                 idMaquina,
                 nomeProcessador,
+                idMaquina,
+                potenciaProcessador,
                 idMaquina,
                 nmrPacotesFisicosProcessador,
                 idMaquina,
@@ -350,13 +354,13 @@ public class Computador {
 
         String queryRede = """
                         INSERT INTO componentes VALUES
-                                                (8, %d, 4, 'nome', '%s', 'Nome da rede'),
-                                                (9, %d, 4, 'nomeExibicao', '%s', 'Nome de exibição da rede'),
-                                                (10, %d, 4, 'enderecoIPv4', '%s', 'Endereço IPv4 da rede'),
-                                                (11, %d, 4, 'enderecoIPv6', '%s', 'Endereço IPv6 da rede'),
-                                                (12, %d, 4, 'enderecoMAC', '%s', 'Endereço MAC da rede'),
-                                                (13, %d, 4, 'hostname', '%s', 'hostname da rede'),
-                                                (14, %d, 4, 'servidoresDNS', '%s', 'servidores DNS da rede')
+                                                (10, %d, 4, 'nome', '%s', 'Nome da rede'),
+                                                (11, %d, 4, 'nomeExibicao', '%s', 'Nome de exibição da rede'),
+                                                (12, %d, 4, 'enderecoIPv4', '%s', 'Endereço IPv4 da rede'),
+                                                (13, %d, 4, 'enderecoIPv6', '%s', 'Endereço IPv6 da rede'),
+                                                (14, %d, 4, 'enderecoMAC', '%s', 'Endereço MAC da rede'),
+                                                (15, %d, 4, 'hostname', '%s', 'hostname da rede'),
+                                                (16, %d, 4, 'servidoresDNS', '%s', 'servidores DNS da rede')
                     """.formatted(
                 idMaquina,
                 nomeRede,
@@ -384,9 +388,9 @@ public class Computador {
 
         String queryDisco = """
                         INSERT INTO componentes VALUES
-                                                (15, %d, 5, 'qtdDiscos', '%s', 'Quantidade de disco no computador'),
-                                                (16, %d, 5, 'nome', '%s', 'Nome do disco'),
-                                                (17, %d, 5, 'tamanho', '%s', 'tamanho do disco')
+                                                (16, %d, 5, 'qtdDiscos', '%s', 'Quantidade de disco no computador'),
+                                                (17, %d, 5, 'nome', '%s', 'Nome do disco'),
+                                                (18, %d, 5, 'tamanho', '%s', 'tamanho do disco')
                     """.formatted(
                 idMaquina,
                 qtdDiscosDisco,
@@ -409,12 +413,12 @@ public class Computador {
 
         String queryVolume = """
                         INSERT INTO componentes VALUES
-                                                (18, %d, 6, 'qtdVolumes', '%s', 'quantidade de volumes no computador'),
-                                                (19, %d, 6, 'UUID', '%s', 'UUID do volume'),
-                                                (20, %d, 6, 'nome', '%s', 'nome do volume'),
-                                                (21, %d, 6, 'total', '%s', 'tamanho total do volume'),
-                                                (22, %d, 6, 'disponivel', '%s', 'tamanho disponivel do volume'),
-                                                (23, %d, 6, 'tipo', '%s', 'tipo do volume')
+                                                (19, %d, 6, 'qtdVolumes', '%s', 'quantidade de volumes no computador'),
+                                                (20, %d, 6, 'UUID', '%s', 'UUID do volume'),
+                                                (21, %d, 6, 'nome', '%s', 'nome do volume'),
+                                                (22, %d, 6, 'total', '%s', 'tamanho total do volume'),
+                                                (23, %d, 6, 'disponivel', '%s', 'tamanho disponivel do volume'),
+                                                (24, %d, 6, 'tipo', '%s', 'tipo do volume')
                     """.formatted(
                 idMaquina,
                 qtdVolumesVolume,

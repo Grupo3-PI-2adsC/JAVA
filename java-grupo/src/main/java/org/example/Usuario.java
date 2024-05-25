@@ -6,7 +6,7 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
-    private Integer Empresa;
+    private Integer fkEmpresa;
 
     public Usuario(Integer id, String tipo, String nome, String email, String senha, Integer fkEmpresa) {
         this.id = id;
