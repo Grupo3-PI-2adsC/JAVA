@@ -1,17 +1,10 @@
 package org.example;
 import com.github.britooo.looca.api.core.Looca;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.h2.engine.User;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.example.pc.Computador;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.sql.Driver;
 public class Conexao {
     private JdbcTemplate conexaoDoBanco;
     private String url;
@@ -107,7 +100,15 @@ public class Conexao {
             con.execute(sqlAtivo);
 //            Computador já tem cadastrado os componentes
             if (vez == 1){
-                computadorMonitorado.atualizarFixo();
+
+                System.out.println("""
+                Atualizando Componentes fixos do computador
+                ............................................""");
+                for (Componente componenteAtual : computadorMonitorado.getListaComponentes()) {
+                    componenteAtual.atualizarFixos();
+                }
+
+//                computadorMonitorado.atualizarFixo();
                 computadorMonitorado.buscarInfos(1);
             }else {
 //                o computador acabou de ser cadastrado e ainda não possui componente

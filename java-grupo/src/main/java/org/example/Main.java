@@ -1,9 +1,14 @@
 package org.example;
 
+import com.github.britooo.looca.api.group.discos.Disco;
+import com.github.britooo.looca.api.group.discos.Volume;
 import oshi.hardware.NetworkIF;
 import com.github.britooo.looca.api.core.Looca;
 
+import java.util.Dictionary;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,9 +16,22 @@ public class Main {
 //
 //    com.teste();
 //        Looca looca = new Looca();
+//        List<Volume> teste = looca.getGrupoDeDiscos().getVolumes();
+//        Integer qtdVolumesVolume = looca.getGrupoDeDiscos().getQuantidadeDeVolumes();
+//        System.out.println(qtdVolumesVolume - 1);
 //
-//        System.out.println(looca.getGrupoDeDiscos().getDiscos());
-
+//        for (int i = 1; i < qtdVolumesVolume; i++) {
+//
+//            //            VOLUME
+//            String UUIDVolume = teste.get(i).getUUID();
+//            String nomeVolume = teste.get(i).getNome();
+//            Long totalVolume = teste.get(i).getTotal();
+//            Long disponivelVolume = teste.get(i).getDisponivel();
+//            String tipoVolume = teste.get(i).getTipo();
+//
+//            System.out.println(nomeVolume);
+//        }
+//
         Scanner input = new Scanner(System.in);
         Scanner inputText = new Scanner(System.in);
 
