@@ -1,8 +1,9 @@
-package org.example;
+package org.example.pc.componentes;
 
 import com.github.britooo.looca.api.core.Looca;
+import org.example.Conexao;
 
-public class ProcessadorCp extends Componente{
+public class ProcessadorCp extends Componente {
     public ProcessadorCp(Integer fkMaquina) {
         super(fkMaquina);
     }
@@ -21,18 +22,18 @@ public class ProcessadorCp extends Componente{
 
         String queryProcessador = """
                     INSERT INTO componentes VALUES
-                                            (4, %d, 3, 'nome', '%s', 'Nome do Processador'),
-                                            (5, %d, 3, 'nmrPacotesFisicos', '%s', 'Numero de pacotes físicos do processador'),
-                                            (7, %d, 3, 'potencia', '%s', 'Potencia do processador'),
-                                            (8, %d, 3, 'nmrCpusFisicos', '%s', 'Numero de CPUs físicas do processador'),
-                                            (9, %d, 3, 'nmrCpusLogicas', '%s', 'Numero de CPUs Logicas do processador')
+                                            (null, %d, 3, 'Nome do processador', '%s', 'Nome do processador'),
+                                            (null, %d, 3, 'Numero de pacotes físicos do processador', '%s', 'Numero de pacotes físicos do processador'),
+                                            (null, %d, 3, 'Potencia do processador', '%s', 'Potencia do processador'),
+                                            (null, %d, 3, 'Numero de CPUs físicas do processador', '%s', 'Numero de CPUs físicas do processador'),
+                                            (null, %d, 3, 'Numero de CPUs Logicas do processador', '%s', 'Numero de CPUs Logicas do processador')
                 """.formatted(
                 fkMaquina,
                 nomeProcessador,
                 fkMaquina,
-                potenciaProcessador,
-                fkMaquina,
                 nmrPacotesFisicosProcessador,
+                fkMaquina,
+                potenciaProcessador,
                 fkMaquina,
                 nmrCpusFisicosProcessador,
                 fkMaquina,
@@ -69,6 +70,7 @@ public class ProcessadorCp extends Componente{
 
         String nomeProcessador = looca.getProcessador().getNome();
         Integer nmrPacotesFisicosProcessador = looca.getProcessador().getNumeroPacotesFisicos();
+        String potenciaProcessador = nomeProcessador.substring(nomeProcessador.indexOf("@") + 2, nomeProcessador.lastIndexOf("G"));
         Integer nmrCpusFisicosProcessador = looca.getProcessador().getNumeroCpusFisicas();
         Integer nmrCpusLogicasProcessador = looca.getProcessador().getNumeroCpusLogicas();
 
@@ -76,7 +78,7 @@ public class ProcessadorCp extends Componente{
 
         String sql17 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nmrCpusLogicas';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de CPUs Logicas do processador';
                 """.formatted(
                 nmrCpusLogicasProcessador,
                 fkMaquina,
@@ -86,7 +88,7 @@ public class ProcessadorCp extends Componente{
 
         String sql18 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nmrCpusFisicos';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de CPUs físicas do processador';
                 """.formatted(
                 nmrCpusFisicosProcessador,
                 fkMaquina,
@@ -94,9 +96,19 @@ public class ProcessadorCp extends Componente{
 
         con.executarQuery(sql18);
 
+        String sql = """
+                
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Potencia do processador';
+                """.formatted(
+                potenciaProcessador,
+                fkMaquina,
+                3);
+
+        con.executarQuery(sql);
+
         String sql19 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nmrPacotesFisicos';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de pacotes físicos do processador';
                 """.formatted(
                 nmrPacotesFisicosProcessador,
                 fkMaquina,
@@ -107,7 +119,7 @@ public class ProcessadorCp extends Componente{
 
         String sql20 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nome';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Nome do Processador';
                 """.formatted(
                 nomeProcessador,
                 fkMaquina,

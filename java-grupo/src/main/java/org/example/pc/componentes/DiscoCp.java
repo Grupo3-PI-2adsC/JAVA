@@ -1,8 +1,9 @@
-package org.example;
+package org.example.pc.componentes;
 
 import com.github.britooo.looca.api.core.Looca;
+import org.example.Conexao;
 
-public class DiscoCp extends Componente{
+public class DiscoCp extends Componente {
     public DiscoCp(Integer fkMaquina) {
         super(fkMaquina);
     }
@@ -14,6 +15,17 @@ public class DiscoCp extends Componente{
         Conexao con = new Conexao();
 
         Integer qtdDiscosDisco = looca.getGrupoDeDiscos().getQuantidadeDeDiscos();
+
+
+        String queryDisco2 = """
+                     INSERT INTO componentes VALUES
+                    (null, %d, 5, 'Quantidade de disco no computador', '%s', 'Quantidade de disco no computador');
+                """ .formatted(
+                fkMaquina,
+                qtdDiscosDisco);
+
+        con.executarQuery(queryDisco2);
+
         for (int i = 0; i < qtdDiscosDisco; i++) {
 
 
@@ -23,12 +35,9 @@ public class DiscoCp extends Componente{
 
             String queryDisco = """
                         INSERT INTO componentes VALUES
-                                                (16, %d, 5, 'qtdDiscos', '%s', 'Quantidade de disco no computador'),
-                                                (17, %d, 5, 'nome', '%s', 'Nome do disco'),
-                                                (18, %d, 5, 'tamanho', '%s', 'tamanho do disco')
+                                                (null, %d, 5, 'Nome do disco', '%s', 'Nome do disco'),
+                                                (null, %d, 5, 'tamanho do disco', '%s', 'tamanho do disco')
                     """.formatted(
-                    fkMaquina,
-                    qtdDiscosDisco,
                     fkMaquina,
                     nomeDisco,
                     fkMaquina,
@@ -37,6 +46,7 @@ public class DiscoCp extends Componente{
 
             con.executarQuery(queryDisco);
         }
+
 
 
     }
@@ -77,7 +87,7 @@ public class DiscoCp extends Componente{
 
             String sql6 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'qtdVolumes';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tamanho do disco';
                 """.formatted(
                     tamanhoDisco,
                     fkMaquina,
@@ -87,7 +97,7 @@ public class DiscoCp extends Componente{
 
             String sql7 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tamanho';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Nome do disco';
                 """.formatted(
                     nomeDisco,
                     fkMaquina,
@@ -98,7 +108,7 @@ public class DiscoCp extends Componente{
 
         String sql8 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nome';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Quantidade de disco no computador';
                 """.formatted(
                 qtdDiscosDisco,
                 fkMaquina,

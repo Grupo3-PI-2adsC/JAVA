@@ -1,4 +1,4 @@
-package org.example;
+package org.example.pc.componentes;
 
 public abstract class Componente {
 

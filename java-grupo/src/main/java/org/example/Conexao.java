@@ -1,6 +1,7 @@
 package org.example;
 import com.github.britooo.looca.api.core.Looca;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.example.pc.componentes.Componente;
 import org.example.pc.Computador;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -97,7 +98,7 @@ public class Conexao {
                     ...............................................""");
 
             String sqlAtivo = "update maquina set ativo = 1 where idMaquina = %d;".formatted(computadorMonitorado.getIdMaquina());
-            con.execute(sqlAtivo);
+            this.executarQuery(sqlAtivo);
 //            Computador já tem cadastrado os componentes
             if (vez == 1){
 
@@ -111,7 +112,12 @@ public class Conexao {
 //                computadorMonitorado.atualizarFixo();
                 computadorMonitorado.buscarInfos(1);
             }else {
+
+                System.out.println("""
+                Cadastrando os Componentes fixos do computador
+                ............................................""");
 //                o computador acabou de ser cadastrado e ainda não possui componente
+
                 computadorMonitorado.buscarInfos(0);
             }
         }catch (Exception erro) {

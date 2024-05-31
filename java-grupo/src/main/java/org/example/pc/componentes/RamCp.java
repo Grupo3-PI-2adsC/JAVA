@@ -1,7 +1,8 @@
-package org.example;
+package org.example.pc.componentes;
 import com.github.britooo.looca.api.core.Looca;
+import org.example.Conexao;
 
-public class RamCp extends Componente{
+public class RamCp extends Componente {
 
 //    private Memoria memoria;
 
@@ -25,7 +26,7 @@ public class RamCp extends Componente{
 
         String queryMemoria = """
                     INSERT INTO componentes VALUES
-                                            (3, %d, 2, 'total', '%s', 'total de memoria do computador')
+                                            (null, %d, 2, 'total de memoria do computador', '%s', 'total de memoria do computador')
                 """.formatted(
                 fkMaquina,
                 totalMemoria
@@ -65,7 +66,7 @@ public class RamCp extends Componente{
 
         String sql21 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'total';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'total de memoria do computador';
                 """.formatted(
                 totalMemoria,
                 fkMaquina,

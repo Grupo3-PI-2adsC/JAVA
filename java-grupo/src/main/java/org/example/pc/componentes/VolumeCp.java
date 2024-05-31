@@ -1,8 +1,9 @@
-package org.example;
+package org.example.pc.componentes;
 
 import com.github.britooo.looca.api.core.Looca;
+import org.example.Conexao;
 
-public class VolumeCp extends Componente{
+public class VolumeCp extends Componente {
 
     public VolumeCp(Integer fkMaquina) {
         super(fkMaquina);
@@ -15,6 +16,16 @@ public class VolumeCp extends Componente{
         Conexao con = new Conexao();
 
         Integer qtdVolumesVolume = looca.getGrupoDeDiscos().getQuantidadeDeVolumes();
+
+        String queryVolume2 = """
+                            INSERT INTO componentes VALUES
+                                (null, %d, 6, 'qtdVolumes', '%s', 'quantidade de volumes no computador');
+                """.formatted(
+                fkMaquina,
+                qtdVolumesVolume);
+
+        con.executarQuery(queryVolume2);
+
         for (int i = 1; i < qtdVolumesVolume; i++) {
 
             //            VOLUME
@@ -26,15 +37,12 @@ public class VolumeCp extends Componente{
 
             String queryVolume = """
                             INSERT INTO componentes VALUES
-                                                    (19, %d, 6, 'qtdVolumes', '%s', 'quantidade de volumes no computador'),
-                                                    (20, %d, 6, 'UUID', '%s', 'UUID do volume'),
-                                                    (21, %d, 6, 'nome', '%s', 'nome do volume'),
-                                                    (22, %d, 6, 'total', '%s', 'tamanho total do volume'),
-                                                    (23, %d, 6, 'disponivel', '%s', 'tamanho disponivel do volume'),
-                                                    (24, %d, 6, 'tipo', '%s', 'tipo do volume')
+                                                    (null, %d, 6, 'UUID do volume', '%s', 'UUID do volume'),
+                                                    (null, %d, 6, 'nome do volume', '%s', 'nome do volume'),
+                                                    (null, %d, 6, 'tamanho total do volume', '%s', 'tamanho total do volume'),
+                                                    (null, %d, 6, 'tamanho disponivel do volume', '%s', 'tamanho disponivel do volume'),
+                                                    (null, %d, 6, 'tipo do volume', '%s', 'tipo do volume')
                         """.formatted(
-                    fkMaquina,
-                    qtdVolumesVolume,
                     fkMaquina,
                     UUIDVolume,
                     fkMaquina,
@@ -63,6 +71,16 @@ public class VolumeCp extends Componente{
         Conexao con = new Conexao();
 
         Integer qtdVolumesVolume = looca.getGrupoDeDiscos().getQuantidadeDeDiscos();
+
+        String sql = """
+                                
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'quantidade de volumes no computador';
+                """.formatted(
+                qtdVolumesVolume,
+                fkMaquina,
+                6);
+        con.executarQuery(sql);
+
         for (int i = 1; i < qtdVolumesVolume; i++) {
             String nomeVolume = looca.getGrupoDeDiscos().getVolumes().get(i).getNome();
             String UUIDVolume = looca.getGrupoDeDiscos().getVolumes().get(i).getUUID();
@@ -70,9 +88,11 @@ public class VolumeCp extends Componente{
             Long disponivelVolume = looca.getGrupoDeDiscos().getVolumes().get(i).getDisponivel();
             String tipoVolume = looca.getGrupoDeDiscos().getVolumes().get(i).getTipo();
 
+
+
             String sql1 = """
                                     
-                    UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tipo';
+                    UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tipo do volume';
                     """.formatted(
                     tipoVolume,
                     fkMaquina,
@@ -82,7 +102,7 @@ public class VolumeCp extends Componente{
 
             String sql2 = """
                     
-                    UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'disponivel';
+                    UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tamanho total do volume';
                     """.formatted(
                     totalVolume,
                     fkMaquina,
@@ -92,9 +112,9 @@ public class VolumeCp extends Componente{
 
             String sql3 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'total';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tamanho disponivel do volume';
                 """.formatted(
-                    tipoVolume,
+                    disponivelVolume,
                     fkMaquina,
                     6);
 
@@ -102,7 +122,7 @@ public class VolumeCp extends Componente{
 
             String sql4 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nome';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nome do volume';
                 """.formatted(
                     nomeVolume,
                     fkMaquina,
@@ -112,7 +132,7 @@ public class VolumeCp extends Componente{
 
             String sql5 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'UUID';
+                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'UUID do volume';
                 """.formatted(
                     UUIDVolume,
                     fkMaquina,
