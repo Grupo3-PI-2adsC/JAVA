@@ -26,8 +26,8 @@ public class Conexao {
         BasicDataSource dataSource = new BasicDataSource();
 
         url = "jdbc:mysql://localhost:3306/netmed";
-        username = "root";
-        password = "Matt@123";
+        username = "sa";
+        password = "Netmed#1@@";
         /*
              Exemplo de driverClassName:
                 com.mysql.cj.jdbc.Driver <- EXEMPLO PARA MYSQL
