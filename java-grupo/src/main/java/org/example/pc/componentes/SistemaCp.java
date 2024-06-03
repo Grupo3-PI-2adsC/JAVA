@@ -21,7 +21,7 @@ public class SistemaCp extends Componente {
         Instant inicializadoSistema = looca.getSistema().getInicializado();
 
         String querySistema = """
-                    INSERT INTO componentes VALUES
+                    INSERT INTO dadosFixos VALUES
                                             (null, %d, 1, 'modelo do Sistema', '%s', 'modelo do Sistema'),
                                             (null, %d, 1, 'inicialização do sistema', '%s', 'inicialização do sistema');
                 """.formatted(
@@ -51,7 +51,7 @@ public class SistemaCp extends Componente {
 
         String sql = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'modelo do Sistema';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'modelo do Sistema';
         
                 """.formatted(
                 modeloSistema,
@@ -64,7 +64,7 @@ public class SistemaCp extends Componente {
 
         String sql22 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'inicialização do sistema';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'inicialização do sistema';
                 """.formatted(
                 inicializadoSistema,
                 fkMaquina,

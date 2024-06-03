@@ -2,6 +2,7 @@ package org.example.pc.componentes;
 
 import com.github.britooo.looca.api.core.Looca;
 import org.example.Conexao;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class ProcessadorCp extends Componente {
     public ProcessadorCp(Integer fkMaquina) {
@@ -21,7 +22,7 @@ public class ProcessadorCp extends Componente {
         Integer nmrCpusLogicasProcessador = looca.getProcessador().getNumeroCpusLogicas();
 
         String queryProcessador = """
-                    INSERT INTO componentes VALUES
+                    INSERT INTO dadosFixos VALUES
                                             (null, %d, 3, 'Nome do processador', '%s', 'Nome do processador'),
                                             (null, %d, 3, 'Numero de pacotes físicos do processador', '%s', 'Numero de pacotes físicos do processador'),
                                             (null, %d, 3, 'Potencia do processador', '%s', 'Potencia do processador'),
@@ -46,19 +47,34 @@ public class ProcessadorCp extends Componente {
     @Override
     public void buscarInfosVariaveis() {
 
+
         Looca looca = new Looca();
-        Conexao con = new Conexao();
+        Conexao conexao = new Conexao();
+        JdbcTemplate con = conexao.getConexaoDoBanco();
+
 
         Double emUsoProcessador = (looca.getProcessador().getUso());
 
-        var queryProcessador= """
-                    iNSERT INTO dadosTempoReal VALUES  (null, %d, 3, current_timestamp(),'emUso', '%s');
-                           """.formatted(
-                fkMaquina,
-                emUsoProcessador
-        );
 
-        con.executarQuery(queryProcessador);
+        try{
+            String queryFk = """
+                    select idDadosFixos from dadosFixos where fkMaquina = %d and fkTipoComponente = 3 and nomeCampo = 'Nome do processador'""".formatted(fkMaquina);
+            System.out.println(queryFk);
+            Integer fk = con.queryForObject(queryFk,Integer.class);
+            System.out.println(fk);
+
+            var queryMemoria= """
+                    iNSERT INTO dadosTempoReal VALUES  (null, %d, %d, 3, current_timestamp(),'emUso', '%s');
+                           """.formatted(
+                    fk,
+                    fkMaquina,
+                    emUsoProcessador
+            );
+
+            conexao.executarQuery(queryMemoria);
+        }catch (Exception erro){
+            System.out.println(erro);
+        }
 
     }
 
@@ -78,7 +94,7 @@ public class ProcessadorCp extends Componente {
 
         String sql17 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de CPUs Logicas do processador';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de CPUs Logicas do processador';
                 """.formatted(
                 nmrCpusLogicasProcessador,
                 fkMaquina,
@@ -88,7 +104,7 @@ public class ProcessadorCp extends Componente {
 
         String sql18 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de CPUs físicas do processador';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de CPUs físicas do processador';
                 """.formatted(
                 nmrCpusFisicosProcessador,
                 fkMaquina,
@@ -98,7 +114,7 @@ public class ProcessadorCp extends Componente {
 
         String sql = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Potencia do processador';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Potencia do processador';
                 """.formatted(
                 potenciaProcessador,
                 fkMaquina,
@@ -108,7 +124,7 @@ public class ProcessadorCp extends Componente {
 
         String sql19 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de pacotes físicos do processador';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Numero de pacotes físicos do processador';
                 """.formatted(
                 nmrPacotesFisicosProcessador,
                 fkMaquina,
@@ -119,7 +135,7 @@ public class ProcessadorCp extends Componente {
 
         String sql20 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Nome do Processador';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'Nome do Processador';
                 """.formatted(
                 nomeProcessador,
                 fkMaquina,

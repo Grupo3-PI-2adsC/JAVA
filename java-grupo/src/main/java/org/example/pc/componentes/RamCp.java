@@ -1,6 +1,12 @@
 package org.example.pc.componentes;
 import com.github.britooo.looca.api.core.Looca;
 import org.example.Conexao;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.RowSet;
+import java.sql.ResultSet;
+import java.util.List;
 
 public class RamCp extends Componente {
 
@@ -25,7 +31,7 @@ public class RamCp extends Componente {
         Long totalMemoria = (looca.getMemoria().getTotal() / 1000000000);
 
         String queryMemoria = """
-                    INSERT INTO componentes VALUES
+                    INSERT INTO dadosFixos VALUES
                                             (null, %d, 2, 'total de memoria do computador', '%s', 'total de memoria do computador')
                 """.formatted(
                 fkMaquina,
@@ -40,18 +46,33 @@ public class RamCp extends Componente {
     public void buscarInfosVariaveis() {
 
         Looca looca = new Looca();
-        Conexao con = new Conexao();
+        Conexao conexao = new Conexao();
+        JdbcTemplate con = conexao.getConexaoDoBanco();
+
 
         Long emUsoMemoria = (looca.getMemoria().getEmUso() / 1000000000);
 
+
+        try{
+            String queryFk = """
+                    select idDadosFixos from dadosFixos where fkMaquina = %d and fkTipoComponente = 2""".formatted(fkMaquina);
+            System.out.println(queryFk);
+            Integer fk = con.queryForObject(queryFk,Integer.class);
+            System.out.println(fk);
+
         var queryMemoria= """
-                    iNSERT INTO dadosTempoReal VALUES  (null, %d, 2, current_timestamp(),'emUso', '%s');
+                    iNSERT INTO dadosTempoReal VALUES  (null, %d, %d, 2, current_timestamp(),'emUso', '%s');
                            """.formatted(
+                fk,
                 fkMaquina,
                 emUsoMemoria
         );
 
-        con.executarQuery(queryMemoria);
+        conexao.executarQuery(queryMemoria);
+        }catch (Exception erro){
+            System.out.println(erro);
+        }
+
 
     }
 
@@ -66,7 +87,7 @@ public class RamCp extends Componente {
 
         String sql21 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'total de memoria do computador';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'total de memoria do computador';
                 """.formatted(
                 totalMemoria,
                 fkMaquina,

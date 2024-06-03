@@ -3,8 +3,12 @@ import com.github.britooo.looca.api.core.Looca;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.example.pc.componentes.Componente;
 import org.example.pc.Computador;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.util.List;
 
 public class Conexao {
     private JdbcTemplate conexaoDoBanco;
@@ -49,7 +53,9 @@ public class Conexao {
         JdbcTemplate con = conexao.getConexaoDoBanco();
 //        RowMapper<Usuario> userTesteRowMapper = (rs, rowNum) -> new Usuario(rs.getInt("id"),
 //                rs.getString("email"), rs.getString("senha"));)
-        RowMapper<Usuario> usuarioRowMapper = (resultSet, i) ->new Usuario(resultSet.getInt("idUsuario"), resultSet.getString("tipoUsuario"), resultSet.getString("nome"), resultSet.getString("email"), resultSet.getString("senha"), resultSet.getInt("fkEmpresa"));
+        RowMapper<Usuario> usuarioRowMapper = (resultSet, i) ->new Usuario(
+                resultSet.getInt("idUsuario"), resultSet.getString("tipoUsuario"), resultSet.getString("nome"),
+                resultSet.getString("email"), resultSet.getString("senha"), resultSet.getInt("fkEmpresa"));
 
         String sql = "select * from usuario where email = '%s' and senha = '%s';".formatted(email,senha);
 
@@ -156,6 +162,8 @@ public class Conexao {
 
     public void executarQuery(String query){
 
+        System.out.println("Exec");
+
         System.out.println("""
                             Executando query:
                             %s
@@ -164,7 +172,7 @@ public class Conexao {
         Conexao conexao = new Conexao();
         JdbcTemplate con = conexao.getConexaoDoBanco();
 
-        con.execute(query);
+         con.execute(query);
     }
 
 }

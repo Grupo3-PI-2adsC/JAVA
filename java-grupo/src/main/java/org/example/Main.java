@@ -2,6 +2,10 @@ package org.example;
 
 import com.github.britooo.looca.api.group.discos.Disco;
 import com.github.britooo.looca.api.group.discos.Volume;
+import com.sun.jna.platform.win32.WinDef;
+import org.example.pc.componentes.DiscoCp;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import oshi.hardware.NetworkIF;
 import com.github.britooo.looca.api.core.Looca;
 
@@ -32,6 +36,11 @@ public class Main {
 //            System.out.println(nomeVolume);
 //        }
 //
+
+
+//        Conexao conexao = new Conexao();
+//        JdbcTemplate con = conexao.getConexaoDoBanco();
+
         Scanner input = new Scanner(System.in);
         Scanner inputText = new Scanner(System.in);
 
@@ -64,7 +73,7 @@ public class Main {
         Conexao con = new Conexao();
 //        Computador computador = new Computador();
         try {
-            Usuario user = con.buscarCredenciais(emailLogin, senhaLogin);
+            con.buscarCredenciais(emailLogin, senhaLogin);
             System.out.println("""
                                 Usuario Logado com sucesso
                                 ..............................""");

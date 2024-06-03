@@ -31,9 +31,9 @@ public class Computador {
         this.ram         = new RamCp(idMaquina);
         this.volume      = new VolumeCp(idMaquina);
         this.sistema     = new SistemaCp(idMaquina);
+        listaComponentes.add(ram);
         listaComponentes.add(disco);
         listaComponentes.add(processador);
-        listaComponentes.add(ram);
         listaComponentes.add(rede);
         listaComponentes.add(sistema);
         listaComponentes.add(volume);
@@ -96,6 +96,7 @@ public class Computador {
     public void buscarInfos(Integer primeiro) {
         if (primeiro == 0) {
             for (Componente componenteAtual : listaComponentes) {
+                System.out.println(componenteAtual);
                 componenteAtual.buscarInfosFixos();
             }
         }
@@ -108,6 +109,7 @@ public class Computador {
                     pegando dados em tempo real
                     ...............................""");
             for (Componente componenteAtual : listaComponentes) {
+                System.out.println(componenteAtual);
                 componenteAtual.buscarInfosVariaveis();
             }
             buscarInfos(1);

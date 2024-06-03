@@ -18,7 +18,7 @@ public class VolumeCp extends Componente {
         Integer qtdVolumesVolume = looca.getGrupoDeDiscos().getQuantidadeDeVolumes();
 
         String queryVolume2 = """
-                            INSERT INTO componentes VALUES
+                            INSERT INTO dadosFixos VALUES
                                 (null, %d, 6, 'qtdVolumes', '%s', 'quantidade de volumes no computador');
                 """.formatted(
                 fkMaquina,
@@ -36,7 +36,7 @@ public class VolumeCp extends Componente {
             String tipoVolume = looca.getGrupoDeDiscos().getVolumes().get(i).getTipo();
 
             String queryVolume = """
-                            INSERT INTO componentes VALUES
+                            INSERT INTO dadosFixos VALUES
                                                     (null, %d, 6, 'UUID do volume', '%s', 'UUID do volume'),
                                                     (null, %d, 6, 'nome do volume', '%s', 'nome do volume'),
                                                     (null, %d, 6, 'tamanho total do volume', '%s', 'tamanho total do volume'),
@@ -74,7 +74,7 @@ public class VolumeCp extends Componente {
 
         String sql = """
                                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'quantidade de volumes no computador';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'quantidade de volumes no computador';
                 """.formatted(
                 qtdVolumesVolume,
                 fkMaquina,
@@ -92,7 +92,7 @@ public class VolumeCp extends Componente {
 
             String sql1 = """
                                     
-                    UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tipo do volume';
+                    UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tipo do volume';
                     """.formatted(
                     tipoVolume,
                     fkMaquina,
@@ -102,7 +102,7 @@ public class VolumeCp extends Componente {
 
             String sql2 = """
                     
-                    UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tamanho total do volume';
+                    UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tamanho total do volume';
                     """.formatted(
                     totalVolume,
                     fkMaquina,
@@ -112,7 +112,7 @@ public class VolumeCp extends Componente {
 
             String sql3 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tamanho disponivel do volume';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'tamanho disponivel do volume';
                 """.formatted(
                     disponivelVolume,
                     fkMaquina,
@@ -122,7 +122,7 @@ public class VolumeCp extends Componente {
 
             String sql4 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nome do volume';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'nome do volume';
                 """.formatted(
                     nomeVolume,
                     fkMaquina,
@@ -132,7 +132,7 @@ public class VolumeCp extends Componente {
 
             String sql5 = """
                 
-                UPDATE componentes SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'UUID do volume';
+                UPDATE dadosFixos SET valorCampo = '%s' where fkMaquina = '%d' and fkTipoComponente = '%d' and nomeCampo = 'UUID do volume';
                 """.formatted(
                     UUIDVolume,
                     fkMaquina,
