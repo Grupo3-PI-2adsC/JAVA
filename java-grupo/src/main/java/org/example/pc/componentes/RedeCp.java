@@ -71,7 +71,7 @@ public class RedeCp extends Componente {
         try {
 
             String queryFk = """
-                    select idFixosRede from fixosRede where fkMaquina = 1 and nomeCampo = '%s'""".formatted(fkMaquina, host);
+                    select idFixosRede from fixosRede where fkMaquina = %d and nomeCampo = '%s'""".formatted(fkMaquina, "hostname da rede");
             System.out.println(queryFk);
             Integer fk = con.queryForObject(queryFk, Integer.class);
             System.out.println(fk);
