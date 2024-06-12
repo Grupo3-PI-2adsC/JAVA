@@ -232,11 +232,11 @@ public class ConexaoMysql extends Conexao {
                     apelido VARCHAR(60),
                     cnpj CHAR(14)
                                 );""");
-//
-//        con.execute("""
-//
-//                    insert into empresa values
-//                            (null, 'Arcos Dourados', 'Fast Food', 'EME GIGANTE', '12345678901234');""");
+
+        con.execute("""
+
+                    insert into empresa values
+                            (null, 'Arcos Dourados', 'Fast Food', 'EME GIGANTE', '12345678901234');""");
 
         con.execute("""
                 
@@ -270,11 +270,11 @@ public class ConexaoMysql extends Conexao {
                     FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
                             );""");
 
-//        con.execute("""
-//
-//
-//                    insert into usuario values
-//                            (null, 'recepção', 'Raimunda', 'raimunda@netmet.com' ,'1234', 1, 1);""");
+        con.execute("""
+
+
+                    insert into usuario values
+                            (null, 'recepção', 'Raimunda', 'raimunda@netmet.com' ,'1234', 1, 1);""");
 
 
         con.execute("""
@@ -327,16 +327,16 @@ public class ConexaoMysql extends Conexao {
                     metricaEstabelecida DOUBLE
                                 );""");
 
-//        con.execute("""
-//
-//                    INSERT INTO tipoComponente VALUES
-//                            (1, 'Sistema operacional', 'bits', null),
-//                                    (2, 'Memoria', 'GiB', 70.0),
-//                                            (3, 'Processador', 'GHz', 2.0),
-//                                            (4, 'Rede', 'Pacotes', 500000.0),
-//                                            (5, 'Disco ', 'Gib', 7988696064.0),
-//                                            (6, 'Volume  ', 'Gib', null),
-//                                            (7, 'Serviços   ', '%', null);""");
+        con.execute("""
+
+                    INSERT INTO tipoComponente VALUES
+                            (1, 'Sistema operacional', 'bits', null),
+                                    (2, 'Memoria', 'GiB', 70.0),
+                                            (3, 'Processador', 'GHz', 2.0),
+                                            (4, 'Rede', 'Pacotes', 500000.0),
+                                            (5, 'Disco ', 'Gib', 7988696064.0),
+                                            (6, 'Volume  ', 'Gib', null),
+                                            (7, 'Serviços   ', '%', null);""");
 
         con.execute("""
                 
