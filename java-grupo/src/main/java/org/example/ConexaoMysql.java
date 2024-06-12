@@ -53,25 +53,17 @@ public class ConexaoMysql extends Conexao {
         this.username = "Netmed";
         this.password = "Netmed#1@@";
 
-//        String dbHost = System.getenv("localhost");
-//        String dbPort = System.getenv("3306");
-//        String dbName = System.getenv("netmed");
-//        String dbUser = System.getenv("Netmed");
-//        String dbPassword = System.getenv("Netmed#1@@");
-//
-//        String dbUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?autoReconnect=true&useSSL=false";
-
-
-        try{
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        this.conexaoDoBanco = new JdbcTemplate(dataSource);
-        } catch (Exception e) {
-            System.err.println("Falha ao conectar ao banco de dados:");
-            e.printStackTrace();
-        }
+        configurarDataSource();
+//        try{
+//        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+//        dataSource.setUrl(url);
+//        dataSource.setUsername(username);
+//        dataSource.setPassword(password);
+//        this.conexaoDoBanco = new JdbcTemplate(dataSource);
+//        } catch (Exception e) {
+//            System.err.println("Falha ao conectar ao banco de dados:");
+//            e.printStackTrace();
+//        }
 
 
         /*
@@ -83,6 +75,20 @@ public class ConexaoMysql extends Conexao {
 
     }
 
+    private void configurarDataSource() {
+        try {
+            BasicDataSource dataSource = new BasicDataSource();
+            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            dataSource.setUrl(url);
+            dataSource.setUsername(username);
+            dataSource.setPassword(password);
+            this.conexaoDoBanco = new JdbcTemplate(dataSource);
+        } catch (Exception e) {
+            System.err.println("Falha ao conectar ao banco de dados:");
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public Usuario buscarCredenciais(String email, String senha) {
         System.out.println("""
@@ -91,8 +97,8 @@ public class ConexaoMysql extends Conexao {
               MYSQL
                 |
                 |""");
-        ConexaoMysql conexao = new ConexaoMysql();
-        JdbcTemplate con = conexao.getConexaoDoBanco();
+
+        JdbcTemplate con = conexaoDoBanco;
 
 //        RowMapper<Usuario> userTesteRowMapper = (rs, rowNum) -> new Usuario(rs.getInt("id"),
 //                rs.getString("email"), rs.getString("senha"));)
@@ -127,8 +133,7 @@ public class ConexaoMysql extends Conexao {
                             Verificando se o computador já existe na nossa base de dados
                             .............................................................""");
 
-        ConexaoMysql conexao = new ConexaoMysql();
-        JdbcTemplate con = conexao.getConexaoDoBanco();
+        JdbcTemplate con = conexaoDoBanco;
 
 
         Looca teste = new Looca();
@@ -137,9 +142,9 @@ public class ConexaoMysql extends Conexao {
         RowMapper<Computador> computadorRowMapper = (resultSet, i) ->new Computador(resultSet.getInt("idMaquina"), resultSet.getString("hostname"),
                 resultSet.getBoolean("ativo"), resultSet.getInt("fkEmpresa"));
 
-        String sql = "select idMaquina, hostname, ativo, fkEmpresa from maquina where hostName = '%s';".formatted(hostname);
+        String sql = String.format("SELECT idMaquina, hostname, ativo, fkEmpresa FROM maquina WHERE hostName = '%s';", hostname);
 
-            Computador computadorMonitorado;
+        Computador computadorMonitorado;
         try {
 
             System.out.println("""
@@ -155,8 +160,9 @@ public class ConexaoMysql extends Conexao {
                     A Maquina em execução existe na base de dados
                     ...............................................""");
 
-            String sqlAtivo = "update maquina set ativo = 1 where idMaquina = %d;".formatted(computadorMonitorado.getIdMaquina());
-            conexao.executarQuery(sqlAtivo);
+            String sqlAtivo = String.format("UPDATE maquina SET ativo = 1 WHERE idMaquina = %d;", computadorMonitorado.getIdMaquina());
+
+            con.execute(sqlAtivo);
 //            Computador já tem cadastrado os componentes
             System.out.println("vez:" + vez);
             if (vez == 1){
@@ -185,12 +191,9 @@ public class ConexaoMysql extends Conexao {
                                     Computador não existe. Vamos cadastralo agora
                                     ..............................................""");
 
-                String sqlMaquina = "INSERT INTO maquina VALUES (null, '%s', %b, %d, %b, %d);".formatted(
-                        hostname,
-                        true,
-                        arquitetura,
-                        false,
-                        userAtual.getFkEmpresa()
+                String sqlMaquina = String.format(
+                        "INSERT INTO maquina VALUES (null, '%s', true, %d, false, %d);",
+                        hostname, arquitetura, userAtual.getFkEmpresa()
                 );
 
                 try {
@@ -199,7 +202,7 @@ public class ConexaoMysql extends Conexao {
                                         Computador Cadastrado com sucesso
                                         ...................................""");
                     computadorMonitorado = null;
-                    conexao.computadorExiste(0, servidor);
+                    this.computadorExiste(0, servidor);
                 } catch (Exception erro2) {
                     System.out.println("""
                                           Erro: %s
@@ -227,22 +230,22 @@ public class ConexaoMysql extends Conexao {
                             %s
                             ........................""".formatted(query));
 
-        ConexaoMysql conexao = new ConexaoMysql();
-        JdbcTemplate con = conexao.getConexaoDoBanco();
+
+        JdbcTemplate con = conexaoDoBanco;
 
 
         con.execute(query);
     }
 
     public void criarBanco(){
-        ConexaoMysql conexao = new ConexaoMysql();
-        Connection con = conexao.getConnectionn();
+
+        JdbcTemplate con = conexaoDoBanco;
 //
-//        con.execute("""
-//
-//                CREATE DATABASE IF NOT EXISTS netmed;
-//                """);
-//
+        con.execute("""
+
+                CREATE DATABASE IF NOT EXISTS netmed;
+                """);
+
 //        con.execute("""
 //                USE netmed;
 //                    """);
