@@ -7,6 +7,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
+        ConexaoMysql con10 = new ConexaoMysql();
+        con10.criarBanco();
 //        Conexao conexao = new Conexao(1);
 //        JdbcTemplate con = conexao.getConexaoDoBanco();
 //
@@ -44,6 +46,7 @@ public class Main {
 //        System.out.println(sla);
 
 //        idMaquina=1, hostname='matteus-Nitro-AN515-57', ativo=true, empresa=1, listaComponentes=[org.example.pc.componentes.RamCp@11981797, org.example.pc.componentes.DiscoCp@774698ab, org.example.pc.componentes.ProcessadorCp@3543df7d, org.example.pc.componentes.RedeCp@17a87e37, org.example.pc.componentes.SistemaCp@20f12539, org.example.pc.componentes.VolumeCp@57459491], rede=org.example.pc.componentes.RedeCp@17a87e37, disco=org.example.pc.componentes.DiscoCp@774698ab, processador=org.example.pc.componentes.ProcessadorCp@3543df7d, ram=org.example.pc.componentes.RamCp@11981797, volume=org.example.pc.componentes.VolumeCp@57459491, sistema=org.example.pc.componentes.SistemaCp@20f12539}
+
 
 
 
