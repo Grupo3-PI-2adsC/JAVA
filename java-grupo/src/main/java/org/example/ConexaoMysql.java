@@ -7,6 +7,10 @@ import org.example.ConexaoMysql;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 public class ConexaoMysql extends Conexao {
 
 
@@ -15,7 +19,7 @@ public class ConexaoMysql extends Conexao {
     private String username;
     private String password;
     private Usuario userAtual = null;
-
+    private Connection connectionn;
 
 
     public String getUrl() {
@@ -38,6 +42,9 @@ public class ConexaoMysql extends Conexao {
         return conexaoDoBanco;
     }
 
+    public Connection getConnectionn() {
+        return connectionn;
+    }
 
     public ConexaoMysql() {
         BasicDataSource dataSource = new BasicDataSource();
@@ -46,18 +53,34 @@ public class ConexaoMysql extends Conexao {
         this.username = "Netmed";
         this.password = "Netmed#1@@";
 
+//        String dbHost = System.getenv("localhost");
+//        String dbPort = System.getenv("3306");
+//        String dbName = System.getenv("netmed");
+//        String dbUser = System.getenv("Netmed");
+//        String dbPassword = System.getenv("Netmed#1@@");
+//
+//        String dbUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?autoReconnect=true&useSSL=false";
 
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+
+        try{
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        this.conexaoDoBanco = new JdbcTemplate(dataSource);
+        } catch (Exception e) {
+            System.err.println("Falha ao conectar ao banco de dados:");
+            e.printStackTrace();
+        }
+
+
         /*
              Exemplo de string de conexões:
                 jdbc:mysql://localhost:3306/mydb <- EXEMPLO PARA MYSQL
                 jdbc:sqlserver://localhost:1433;database=mydb <- EXEMPLO PARA SQL SERVER
         */
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
 
-        this.conexaoDoBanco = new JdbcTemplate(dataSource);
+
     }
 
     @Override
@@ -213,190 +236,190 @@ public class ConexaoMysql extends Conexao {
 
     public void criarBanco(){
         ConexaoMysql conexao = new ConexaoMysql();
-        JdbcTemplate con = conexao.getConexaoDoBanco();
-
-        con.execute("""
-
-                CREATE DATABASE IF NOT EXISTS netmed;
-                """);
-
-        con.execute("""
-                USE netmed;
-                    """);
-
-        con.execute("""
-                CREATE TABLE IF NOT EXISTS empresa (
-                            idEmpresa INT AUTO_INCREMENT PRIMARY KEY,
-                            nomeFantasia VARCHAR(100),
-                    razaoSocial VARCHAR(100),
-                    apelido VARCHAR(60),
-                    cnpj CHAR(14)
-                                );""");
-
-        con.execute("""
-
-                    insert into empresa values
-                            (null, 'Arcos Dourados', 'Fast Food', 'EME GIGANTE', '12345678901234');""");
-
-        con.execute("""
-                
-                                
-                    CREATE TABLE IF NOT EXISTS endereco (
-                            idEndereco INT AUTO_INCREMENT PRIMARY KEY,
-                            cep CHAR(8),
-                    rua VARCHAR(60),
-                    bairro VARCHAR(60),
-                    cidade VARCHAR(60),
-                    unidadeFederativa VARCHAR(60),
-                    numero int,
-                    complemento VARCHAR(90),
-                    atual BOOLEAN,
-                    fkEmpresa INT,
-                    FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
-                            );""");
-
-        con.execute("""
-                
-                                
-                                
-                    CREATE TABLE IF NOT EXISTS usuario (
-                            idUsuario INT AUTO_INCREMENT PRIMARY KEY,
-                            tipoUsuario VARCHAR(45),
-                    nome VARCHAR(100),
-                    email VARCHAR(100) UNIQUE,
-                    senha VARCHAR(30),
-                    ativo Boolean,
-                    fkEmpresa INT,
-                    FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
-                            );""");
-
-        con.execute("""
-
-
-                    insert into usuario values
-                            (null, 'recepção', 'Raimunda', 'raimunda@netmet.com' ,'1234', 1, 1);""");
-
-
-        con.execute("""
-                
-                                
-                    CREATE TABLE IF NOT EXISTS manuais (
-                            idManual INT AUTO_INCREMENT PRIMARY KEY,
-                            tituloManual VARCHAR(45),
-                    descricaoManual VARCHAR(100),
-                    usuárioUltimaAlteracao VARCHAR(100) UNIQUE,
-                    dtUltimaAlteracao DATE,
-                    fkUsuarioCriador INT,
-                    dtCriacao DATE,
-                    FOREIGN KEY (fkUsuarioCriador) REFERENCES usuario(idUsuario)
-                            );""");
-
-
-        con.execute("""
-                
-                                
-                    CREATE TABLE IF NOT EXISTS maquina (
-                            idMaquina INT AUTO_INCREMENT PRIMARY KEY,
-                            hostName VARCHAR(45) unique,
-                    ativo Boolean,
-                    arquitetura int,
-                    validado boolean,
-                    fkEmpresa INT,
-                    FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
-                            );""");
-
-        con.execute("""
-                
-                                
-                    CREATE TABLE IF NOT EXISTS servicos(
-                            PID int,
-                            nome VARCHAR(50),
-                    estado boolean,
-                    fkMaquina int,
-                    foreign key (fkMaquina) references maquina(idMaquina),
-                    primary key (PID, fkMaquina)
-                                );""");
-
-        con.execute("""
-                
-                                
-                    CREATE TABLE IF NOT EXISTS tipoComponente (
-                            idTipoComponente INT primary key,
-                            nomeComponente VARCHAR(45),
-                    unidadeMedida VARCHAR(10),
-                    metricaEstabelecida DOUBLE
-                                );""");
-
-        con.execute("""
-
-                    INSERT INTO tipoComponente VALUES
-                            (1, 'Sistema operacional', 'bits', null),
-                                    (2, 'Memoria', 'GiB', 70.0),
-                                            (3, 'Processador', 'GHz', 2.0),
-                                            (4, 'Rede', 'Pacotes', 500000.0),
-                                            (5, 'Disco ', 'Gib', 7988696064.0),
-                                            (6, 'Volume  ', 'Gib', null),
-                                            (7, 'Serviços   ', '%', null);""");
-
-        con.execute("""
-                
-                                
-                    CREATE TABLE IF NOT EXISTS dadosFixos (
-                            idDadosFixos INT NOT NULL auto_increment,
-                            fkMaquina INT,
-                            fkTipoComponente INT,
-                            nomeCampo VARCHAR(45),
-                    valorCampo VARCHAR(150),
-                    descricao varchar(200),
-                    PRIMARY KEY (idDadosFixos, fkMaquina, fkTipoComponente),
-                    FOREIGN KEY (fkMaquina) REFERENCES maquina(idMaquina),
-                    FOREIGN KEY (fkTipoComponente) REFERENCES tipoComponente(idTipoComponente)
-                            );""");
-
-        con.execute("""
-                
-                                
-                                
-                    CREATE TABLE IF NOT EXISTS dadosTempoReal (
-                            idDadosTempoReal INT AUTO_INCREMENT,
-                            fkDadosFixos INT,
-                            fkMaquina INT,
-                            fkTipoComponente INT,
-                            dataHora DATETIME,
-                            nomeCampo VARCHAR(45),
-                    valorCampo VARCHAR(150),
-                    PRIMARY KEY  (idDadosTempoReal, fkDadosFixos, fkMaquina, fkTipoComponente),
-                    FOREIGN KEY (fkDadosFixos) REFERENCES dadosFixos(idDadosFixos),
-                    FOREIGN KEY (fkTipoComponente) REFERENCES tipoComponente(idTipoComponente),
-                    FOREIGN KEY (fkMaquina) REFERENCES maquina(idMaquina)
-                            );""");
-
-        con.execute("""
-                
-                                
-                    CREATE TABLE IF NOT EXISTS fixosRede (
-                            idFixosRede INT AUTO_INCREMENT,
-                            fkMaquina INT,
-                            nomeCampo VARCHAR(45),
-                    valorCampo VARCHAR(255),
-                    PRIMARY KEY (idFixosRede, fkMaquina),
-                    FOREIGN KEY (fkMaquina) REFERENCES maquina(idMaquina)
-                            );""");
-
-        con.execute("""
-                
-                                
-                    CREATE TABLE IF NOT EXISTS variaveisRede (
-                            idVariaveisRede INT AUTO_INCREMENT,
-                            fkFixosRede INT,
-                            fkMaquina INT,
-                            dataHora DATETIME,
-                            nomeCampo VARCHAR(45),
-                    valorCampo VARCHAR(45),
-                    PRIMARY KEY (idVariaveisRede, fkFixosRede, fkMaquina),
-                    FOREIGN KEY (fkFixosRede) REFERENCES fixosRede(idFixosRede),
-                    FOREIGN KEY (fkMaquina) REFERENCES maquina(idMaquina)
-                            );""");
+        Connection con = conexao.getConnectionn();
+//
+//        con.execute("""
+//
+//                CREATE DATABASE IF NOT EXISTS netmed;
+//                """);
+//
+//        con.execute("""
+//                USE netmed;
+//                    """);
+//
+//        con.execute("""
+//                CREATE TABLE IF NOT EXISTS empresa (
+//                            idEmpresa INT AUTO_INCREMENT PRIMARY KEY,
+//                            nomeFantasia VARCHAR(100),
+//                    razaoSocial VARCHAR(100),
+//                    apelido VARCHAR(60),
+//                    cnpj CHAR(14)
+//                                );""");
+//
+//        con.execute("""
+//
+//                    insert into empresa values
+//                            (null, 'Arcos Dourados', 'Fast Food', 'EME GIGANTE', '12345678901234');""");
+//
+//        con.execute("""
+//
+//
+//                    CREATE TABLE IF NOT EXISTS endereco (
+//                            idEndereco INT AUTO_INCREMENT PRIMARY KEY,
+//                            cep CHAR(8),
+//                    rua VARCHAR(60),
+//                    bairro VARCHAR(60),
+//                    cidade VARCHAR(60),
+//                    unidadeFederativa VARCHAR(60),
+//                    numero int,
+//                    complemento VARCHAR(90),
+//                    atual BOOLEAN,
+//                    fkEmpresa INT,
+//                    FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
+//                            );""");
+//
+//        con.execute("""
+//
+//
+//
+//                    CREATE TABLE IF NOT EXISTS usuario (
+//                            idUsuario INT AUTO_INCREMENT PRIMARY KEY,
+//                            tipoUsuario VARCHAR(45),
+//                    nome VARCHAR(100),
+//                    email VARCHAR(100) UNIQUE,
+//                    senha VARCHAR(30),
+//                    ativo Boolean,
+//                    fkEmpresa INT,
+//                    FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
+//                            );""");
+//
+//        con.execute("""
+//
+//
+//                    insert into usuario values
+//                            (null, 'recepção', 'Raimunda', 'raimunda@netmet.com' ,'1234', 1, 1);""");
+//
+//
+//        con.execute("""
+//
+//
+//                    CREATE TABLE IF NOT EXISTS manuais (
+//                            idManual INT AUTO_INCREMENT PRIMARY KEY,
+//                            tituloManual VARCHAR(45),
+//                    descricaoManual VARCHAR(100),
+//                    usuárioUltimaAlteracao VARCHAR(100) UNIQUE,
+//                    dtUltimaAlteracao DATE,
+//                    fkUsuarioCriador INT,
+//                    dtCriacao DATE,
+//                    FOREIGN KEY (fkUsuarioCriador) REFERENCES usuario(idUsuario)
+//                            );""");
+//
+//
+//        con.execute("""
+//
+//
+//                    CREATE TABLE IF NOT EXISTS maquina (
+//                            idMaquina INT AUTO_INCREMENT PRIMARY KEY,
+//                            hostName VARCHAR(45) unique,
+//                    ativo Boolean,
+//                    arquitetura int,
+//                    validado boolean,
+//                    fkEmpresa INT,
+//                    FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
+//                            );""");
+//
+//        con.execute("""
+//
+//
+//                    CREATE TABLE IF NOT EXISTS servicos(
+//                            PID int,
+//                            nome VARCHAR(50),
+//                    estado boolean,
+//                    fkMaquina int,
+//                    foreign key (fkMaquina) references maquina(idMaquina),
+//                    primary key (PID, fkMaquina)
+//                                );""");
+//
+//        con.execute("""
+//
+//
+//                    CREATE TABLE IF NOT EXISTS tipoComponente (
+//                            idTipoComponente INT primary key,
+//                            nomeComponente VARCHAR(45),
+//                    unidadeMedida VARCHAR(10),
+//                    metricaEstabelecida DOUBLE
+//                                );""");
+//
+//        con.execute("""
+//
+//                    INSERT INTO tipoComponente VALUES
+//                            (1, 'Sistema operacional', 'bits', null),
+//                                    (2, 'Memoria', 'GiB', 70.0),
+//                                            (3, 'Processador', 'GHz', 2.0),
+//                                            (4, 'Rede', 'Pacotes', 500000.0),
+//                                            (5, 'Disco ', 'Gib', 7988696064.0),
+//                                            (6, 'Volume  ', 'Gib', null),
+//                                            (7, 'Serviços   ', '%', null);""");
+//
+//        con.execute("""
+//
+//
+//                    CREATE TABLE IF NOT EXISTS dadosFixos (
+//                            idDadosFixos INT NOT NULL auto_increment,
+//                            fkMaquina INT,
+//                            fkTipoComponente INT,
+//                            nomeCampo VARCHAR(45),
+//                    valorCampo VARCHAR(150),
+//                    descricao varchar(200),
+//                    PRIMARY KEY (idDadosFixos, fkMaquina, fkTipoComponente),
+//                    FOREIGN KEY (fkMaquina) REFERENCES maquina(idMaquina),
+//                    FOREIGN KEY (fkTipoComponente) REFERENCES tipoComponente(idTipoComponente)
+//                            );""");
+//
+//        con.execute("""
+//
+//
+//
+//                    CREATE TABLE IF NOT EXISTS dadosTempoReal (
+//                            idDadosTempoReal INT AUTO_INCREMENT,
+//                            fkDadosFixos INT,
+//                            fkMaquina INT,
+//                            fkTipoComponente INT,
+//                            dataHora DATETIME,
+//                            nomeCampo VARCHAR(45),
+//                    valorCampo VARCHAR(150),
+//                    PRIMARY KEY  (idDadosTempoReal, fkDadosFixos, fkMaquina, fkTipoComponente),
+//                    FOREIGN KEY (fkDadosFixos) REFERENCES dadosFixos(idDadosFixos),
+//                    FOREIGN KEY (fkTipoComponente) REFERENCES tipoComponente(idTipoComponente),
+//                    FOREIGN KEY (fkMaquina) REFERENCES maquina(idMaquina)
+//                            );""");
+//
+//        con.execute("""
+//
+//
+//                    CREATE TABLE IF NOT EXISTS fixosRede (
+//                            idFixosRede INT AUTO_INCREMENT,
+//                            fkMaquina INT,
+//                            nomeCampo VARCHAR(45),
+//                    valorCampo VARCHAR(255),
+//                    PRIMARY KEY (idFixosRede, fkMaquina),
+//                    FOREIGN KEY (fkMaquina) REFERENCES maquina(idMaquina)
+//                            );""");
+//
+//        con.execute("""
+//
+//
+//                    CREATE TABLE IF NOT EXISTS variaveisRede (
+//                            idVariaveisRede INT AUTO_INCREMENT,
+//                            fkFixosRede INT,
+//                            fkMaquina INT,
+//                            dataHora DATETIME,
+//                            nomeCampo VARCHAR(45),
+//                    valorCampo VARCHAR(45),
+//                    PRIMARY KEY (idVariaveisRede, fkFixosRede, fkMaquina),
+//                    FOREIGN KEY (fkFixosRede) REFERENCES fixosRede(idFixosRede),
+//                    FOREIGN KEY (fkMaquina) REFERENCES maquina(idMaquina)
+//                            );""");
 
 
     }
