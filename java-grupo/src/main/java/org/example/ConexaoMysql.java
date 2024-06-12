@@ -49,10 +49,9 @@ public class ConexaoMysql extends Conexao {
     public ConexaoMysql() {
         BasicDataSource dataSource = new BasicDataSource();
 
-        this.url = "jdbc:mysql://localhost:3306/netmed";
+        this.url = "jdbc:mysql://localhost:3306/netmed"; //mysql-container
         this.username = "Netmed";
         this.password = "Netmed#1@@";
-
         configurarDataSource();
 //        try{
 //        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -177,6 +176,7 @@ public class ConexaoMysql extends Conexao {
                 ............................................""");
 //                o computador acabou de ser cadastrado e ainda não possui componente
 
+
                 computadorMonitorado.cadastrarFixos(servidor);
                 System.out.println("|Dados fixos cadastrados|");
                 System.out.println(computadorMonitorado);
@@ -192,8 +192,8 @@ public class ConexaoMysql extends Conexao {
                                     ..............................................""");
 
                 String sqlMaquina = String.format(
-                        "INSERT INTO maquina VALUES (null, '%s', true, %d, false, %d);",
-                        hostname, arquitetura, userAtual.getFkEmpresa()
+                        "INSERT INTO maquina VALUES (%s, '%s', true, %d, false, %d);",
+                         hostname, hostname, arquitetura, userAtual.getFkEmpresa()
                 );
 
                 try {

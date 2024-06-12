@@ -142,7 +142,9 @@ public class ConexaoSqlserver extends Conexao {
 //                o computador acabou de ser cadastrado e ainda não possui componente
 
                 computadorMonitorado.cadastrarFixos(servidor);
-                computadorMonitorado.buscarInfos(1,servidor);
+                System.out.println("|Dados fixos cadastrados|");
+                System.out.println(computadorMonitorado);
+                computadorMonitorado.buscarInfos(1, servidor);
             }
         }catch (Exception erro) {
             System.out.println(erro);

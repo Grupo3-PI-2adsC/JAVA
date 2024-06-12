@@ -87,14 +87,14 @@ public class Main {
             Computador computador = con.computadorExiste(1, true);
 
             try {
-                con10.buscarCredenciais(emailLogin, senhaLogin);
+//                con10.buscarCredenciais(emailLogin, senhaLogin);
 
                 System.out.println("""
                                 Usuario Logado com sucesso
                                 ..............................""");
 
 
-                Computador computador1 = con10.computadorExiste(1, true);
+                Computador computador1 = con.computadorExiste(1, true);
                 System.out.println(computador1);
                 computador.buscarInfos(1, true);
 
@@ -109,21 +109,21 @@ public class Main {
                                 .......................................""");
             if (erro.getCause() != null){
 
-                try {
-                    con10.buscarCredenciais(emailLogin, senhaLogin);
-
-                    System.out.println("""
-                                        Usuario Logado com sucesso localmente
-                                        ..............................""");
-
-
-                    Computador computador1 = con10.computadorExiste(1, false);
-                    System.out.println("main + " + computador1);
-
-                }catch (Exception erro2){
-                    System.out.println("erro no main");
-                    System.out.println(erro2);
-                }
+//                try {
+//                    con10.buscarCredenciais(emailLogin, senhaLogin);
+//
+//                    System.out.println("""
+//                                        Usuario Logado com sucesso localmente
+//                                        ..............................""");
+//
+//
+//                    Computador computador1 = con10.computadorExiste(1, false);
+//                    System.out.println("main + " + computador1);
+//
+//                }catch (Exception erro2){
+//                    System.out.println("erro no main");
+//                    System.out.println(erro2);
+//                }
             }
         }
 
