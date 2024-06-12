@@ -7,8 +7,6 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        ConexaoMysql con10 = new ConexaoMysql();
-        con10.criarBanco();
 //        Conexao conexao = new Conexao(1);
 //        JdbcTemplate con = conexao.getConexaoDoBanco();
 //
@@ -49,10 +47,13 @@ public class Main {
 
 
 
+//        con10.criarBanco();
 
 
+        ConexaoMysql con10 = new ConexaoMysql();
         Scanner input = new Scanner(System.in);
         Scanner inputText = new Scanner(System.in);
+        ConexaoSqlserver con = new ConexaoSqlserver();
 
         System.out.println("""
                     ----------------------------------------
@@ -80,7 +81,6 @@ public class Main {
                     ----------------------------------------""");
         String confirmarSenhaLogin = inputText.nextLine();
 
-        ConexaoSqlserver con = new ConexaoSqlserver();
 //        Computador computador = new Computador();
         try {
             con.buscarCredenciais(emailLogin, senhaLogin);
