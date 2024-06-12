@@ -61,9 +61,9 @@ public class ConexaoMysql extends Conexao {
 //
 //        String dbUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?autoReconnect=true&useSSL=false";
 
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 
         try{
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
