@@ -115,12 +115,13 @@ public class ConexaoMysql extends Conexao {
         userAtual = con.queryForObject(sql,
                 usuarioRowMapper);
 
-
+        System.out.println(userAtual);
         return userAtual;
     }
 
     @Override
-    public Computador computadorExiste(Integer vez, Boolean servidor) {
+    public Computador computadorExiste(Integer vez, Boolean servidor, Usuario usuario) {
+        userAtual = usuario;
         System.out.println("""
                 |
                 |
@@ -138,7 +139,7 @@ public class ConexaoMysql extends Conexao {
         Looca teste = new Looca();
         String hostname = teste.getRede().getParametros().getHostName();
         Integer arquitetura = teste.getSistema().getArquitetura();
-        RowMapper<Computador> computadorRowMapper = (resultSet, i) ->new Computador(resultSet.getInt("idMaquina"), resultSet.getString("hostname"),
+        RowMapper<Computador> computadorRowMapper = (resultSet, i) ->new Computador(resultSet.getString("idMaquina"), resultSet.getString("hostname"),
                 resultSet.getBoolean("ativo"), resultSet.getInt("fkEmpresa"));
 
         String sql = String.format("SELECT idMaquina, hostname, ativo, fkEmpresa FROM maquina WHERE hostName = '%s';", hostname);
@@ -159,7 +160,7 @@ public class ConexaoMysql extends Conexao {
                     A Maquina em execução existe na base de dados
                     ...............................................""");
 
-            String sqlAtivo = String.format("UPDATE maquina SET ativo = 1 WHERE idMaquina = %d;", computadorMonitorado.getIdMaquina());
+            String sqlAtivo = String.format("UPDATE maquina SET ativo = 1 WHERE idMaquina = '%s';", computadorMonitorado.getIdMaquina());
 
             con.execute(sqlAtivo);
 //            Computador já tem cadastrado os componentes
@@ -169,7 +170,7 @@ public class ConexaoMysql extends Conexao {
                 computadorMonitorado.atualizarFixos(servidor);
 
                 return computadorMonitorado;
-            }else {
+            }else if (vez == 0){
 
                 System.out.println("""
                 Cadastrando os Componentes fixos do computador
@@ -180,7 +181,8 @@ public class ConexaoMysql extends Conexao {
                 computadorMonitorado.cadastrarFixos(servidor);
                 System.out.println("|Dados fixos cadastrados|");
                 System.out.println(computadorMonitorado);
-                computadorMonitorado.buscarInfos(1, servidor);
+                return computadorMonitorado;
+//                computadorMonitorado.buscarInfos(1, servidor);
             }
 
         }catch (Exception erro) {
@@ -192,7 +194,7 @@ public class ConexaoMysql extends Conexao {
                                     ..............................................""");
 
                 String sqlMaquina = String.format(
-                        "INSERT INTO maquina VALUES (%s, '%s', true, %d, false, %d);",
+                        "INSERT INTO maquina VALUES ('%s', '%s', true, %d, false, %d);",
                          hostname, hostname, arquitetura, userAtual.getFkEmpresa()
                 );
 
@@ -202,7 +204,7 @@ public class ConexaoMysql extends Conexao {
                                         Computador Cadastrado com sucesso
                                         ...................................""");
                     computadorMonitorado = null;
-                    this.computadorExiste(0, servidor);
+                    this.computadorExiste(0, servidor, userAtual);
                 } catch (Exception erro2) {
                     System.out.println("""
                                           Erro: %s

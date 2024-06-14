@@ -83,8 +83,9 @@ public class Main {
 
 //        Computador computador = new Computador();
         try {
-            con.buscarCredenciais(emailLogin, senhaLogin);
-            Computador computador = con.computadorExiste(1, true);
+            Usuario userMysql = con10.buscarCredenciais(emailLogin, senhaLogin);
+            Usuario userSqlserver = con.buscarCredenciais(emailLogin, senhaLogin);
+            Computador computador = con10.computadorExiste(3, false, userMysql);
 
             try {
 //                con10.buscarCredenciais(emailLogin, senhaLogin);
@@ -94,9 +95,17 @@ public class Main {
                                 ..............................""");
 
 
-                Computador computador1 = con.computadorExiste(1, true);
-                System.out.println(computador1);
-                computador.buscarInfos(1, true);
+                Computador computador1 = con.computadorExiste(1, true, userSqlserver);
+                System.out.println("Main: " + computador1);
+
+                while(true) {
+                    try {
+                        computador1.buscarInfos(1, true);
+                        computador.buscarInfos(1, false);
+                    }catch (Exception erro){
+                        System.out.println(erro);
+                    }
+                }
 
             }catch (Exception erro){
                 System.out.println(erro);
