@@ -144,8 +144,12 @@ public class ConexaoSqlserver extends Conexao {
 
                 computadorMonitorado.cadastrarFixos(servidor);
                 System.out.println("|Dados fixos cadastrados|");
-                System.out.println(computadorMonitorado);
-                return computadorMonitorado;
+
+                Computador computadorMonitorado2 = con.queryForObject(sql,
+                        computadorRowMapper);
+
+                System.out.println(computadorMonitorado2);
+                return computadorMonitorado2;
 //                computadorMonitorado.buscarInfos(1, servidor);
             }
         }catch (Exception erro) {
@@ -171,7 +175,11 @@ public class ConexaoSqlserver extends Conexao {
                                         Computador Cadastrado com sucesso
                                         ...................................""");
 
-                    conexao.computadorExiste(0, servidor, userAtual);
+                    computadorMonitorado = con.queryForObject(sql, computadorRowMapper);
+                    System.out.println("Computador monitorado após cadastro: " + computadorMonitorado);
+
+                    return this.computadorExiste(0, servidor, userAtual);
+
                 } catch (Exception erro2) {
                     System.out.println("""
                                           Erro: %s

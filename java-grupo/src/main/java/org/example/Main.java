@@ -83,8 +83,8 @@ public class Main {
 
 //        Computador computador = new Computador();
         try {
-            Usuario userMysql = con10.buscarCredenciais(emailLogin, senhaLogin);
             Usuario userSqlserver = con.buscarCredenciais(emailLogin, senhaLogin);
+            Usuario userMysql = con10.buscarCredenciais(emailLogin, senhaLogin);
             Computador computador = con10.computadorExiste(3, false, userMysql);
 
             try {

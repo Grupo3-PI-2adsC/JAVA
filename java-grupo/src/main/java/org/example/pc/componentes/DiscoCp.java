@@ -115,8 +115,8 @@ public class DiscoCp extends Componente {
                 ConexaoSqlserver conexao1 = new ConexaoSqlserver();
                 JdbcTemplate con1 = conexao1.getConexaoDoBanco();
                 con1.query(queryFk, (resultSet) -> {
-                    String fk2 = resultSet.getString("idDadosFixos");
-                    System.out.println(fk2);
+                    Integer fk = resultSet.getInt("idDadosFixos");
+                    System.out.println(fk);
                     Looca looca = new Looca();
 
                     Long leiturasDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getLeituras());
@@ -130,13 +130,13 @@ public class DiscoCp extends Componente {
                                   ,dataHora
                                   ,nomeCampo
                                   ,valorCampo)VALUES
-                                    (%s, '%s', 5, current_timestamp,'Leituras', '%s'),
-                                                        (%s, '%s', 5, current_timestamp,'Leituras', '%s');
+                                    (%d, '%s', 5, current_timestamp,'Leituras', '%s'),
+                                                        (%d, '%s', 5, current_timestamp,'Leituras', '%s');
                             """.formatted(
-                            fk2,
+                            fk,
                             fkMaquina,
                             leiturasDisco,
-                            fk2,
+                            fk,
                             fkMaquina,
                             escritarDisco
                     );
@@ -145,7 +145,7 @@ public class DiscoCp extends Componente {
 
 
                     while (resultSet.next()) {
-                        String fk = resultSet.getString("valorCampo");
+//                        String fk = resultSet.getString("valorCampo");
 
                         for (Disco discoAtual : looca.getGrupoDeDiscos().getDiscos()) {
                             if (discoAtual.getNome().equals(fk)) {
@@ -158,8 +158,8 @@ public class DiscoCp extends Componente {
                                                   ,dataHora
                                                   ,nomeCampo
                                                   ,valorCampo)  VALUES
-                                                  (%d, '%s', 5, current_timestamp,'Leituras', '%s'),
-                                                                    (%d, '%s', 5, current_timestamp,'Leituras', '%s');
+                                                  ( %d, '%s', 5, current_timestamp,'Leituras', '%s'),
+                                                                    ( %d, '%s', 5, current_timestamp,'Leituras', '%s');
                                         """.formatted(
                                         fk,
                                         fkMaquina,
@@ -182,8 +182,8 @@ public class DiscoCp extends Componente {
                 ConexaoMysql conexao = new ConexaoMysql();
                 JdbcTemplate con = conexao.getConexaoDoBanco();
                 con.query(queryFk, (resultSet) -> {
-                    String fk2 = resultSet.getString("idDadosFixos");
-                    System.out.println(fk2);
+                    Integer fk = resultSet.getInt("idDadosFixos");
+                    System.out.println(fk);
                     Looca looca = new Looca();
 
                     Long leiturasDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getLeituras());
@@ -197,13 +197,13 @@ public class DiscoCp extends Componente {
                              ,dataHora
                              ,nomeCampo
                              ,valorCampo)
-                                                       VALUES  ( '%s', %d, 5, current_timestamp(),'Leituras', '%s'),
-                                                               ( '%s', %d, 5, current_timestamp(),'Escritas', '%s');
+                                                       VALUES  ( %d, '%s', 5, current_timestamp(),'Leituras', '%s'),
+                                                               ( %d, '%s', 5, current_timestamp(),'Escritas', '%s');
                                    """.formatted(
-                            fk2,
+                            fk,
                             fkMaquina,
                             leiturasDisco,
-                            fk2,
+                            fk,
                             fkMaquina,
                             escritarDisco
                     );
@@ -213,7 +213,7 @@ public class DiscoCp extends Componente {
 
 
                     while (resultSet.next()){
-                        String fk = resultSet.getString("valorCampo");
+//                        String fk = resultSet.getString("valorCampo");
 
                         for (Disco discoAtual : looca.getGrupoDeDiscos().getDiscos()){
                             if (discoAtual.getNome().equals(fk)){
@@ -226,8 +226,8 @@ public class DiscoCp extends Componente {
                              ,dataHora
                              ,nomeCampo
                              ,valorCampo)
-                                                       VALUES  ( '%s', '%s', 5, current_timestamp(),'Leituras', '%s'),
-                                                               ( '%s', '%s', 5, current_timestamp(),'Leituras', '%s');
+                                                       VALUES  ( %d, '%s', 5, current_timestamp(),'Leituras', '%s'),
+                                                               ( %d, '%s', 5, current_timestamp(),'Escritas', '%s');
                                            """.formatted(
                                         fk,
                                         fkMaquina,

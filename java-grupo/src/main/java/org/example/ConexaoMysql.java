@@ -180,8 +180,12 @@ public class ConexaoMysql extends Conexao {
 
                 computadorMonitorado.cadastrarFixos(servidor);
                 System.out.println("|Dados fixos cadastrados|");
-                System.out.println(computadorMonitorado);
-                return computadorMonitorado;
+
+                Computador computadorMonitorado2 = con.queryForObject(sql,
+                        computadorRowMapper);
+
+                System.out.println(computadorMonitorado2);
+                return computadorMonitorado2;
 //                computadorMonitorado.buscarInfos(1, servidor);
             }
 
@@ -203,8 +207,10 @@ public class ConexaoMysql extends Conexao {
                     System.out.println("""
                                         Computador Cadastrado com sucesso
                                         ...................................""");
-                    computadorMonitorado = null;
-                    this.computadorExiste(0, servidor, userAtual);
+                    computadorMonitorado = con.queryForObject(sql, computadorRowMapper);
+                    System.out.println("Computador monitorado após cadastro: " + computadorMonitorado);
+
+                    return this.computadorExiste(0, servidor, userAtual);
                 } catch (Exception erro2) {
                     System.out.println("""
                                           Erro: %s
