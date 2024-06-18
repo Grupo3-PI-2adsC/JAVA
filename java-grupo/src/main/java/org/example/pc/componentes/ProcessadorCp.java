@@ -20,7 +20,7 @@ public class ProcessadorCp extends Componente {
 
 
         String nomeProcessador = looca.getProcessador().getNome();
-        String potenciaProcessador = nomeProcessador.substring(nomeProcessador.indexOf("@") + 2, nomeProcessador.lastIndexOf("G"));
+//        String potenciaProcessador = nomeProcessador.substring(nomeProcessador.indexOf("@") + 2, nomeProcessador.lastIndexOf("G"));
         Integer nmrPacotesFisicosProcessador = looca.getProcessador().getNumeroPacotesFisicos();
         Integer nmrCpusFisicosProcessador = looca.getProcessador().getNumeroCpusFisicas();
         Integer nmrCpusLogicasProcessador = looca.getProcessador().getNumeroCpusLogicas();
@@ -34,7 +34,6 @@ public class ProcessadorCp extends Componente {
                     ,descricao)  VALUES
                                             ( '%s', 3, 'Nome do processador', '%s', 'Nome do processador'),
                                             ( '%s', 3, 'Numero de pacotes físicos do processador', '%s', 'Numero de pacotes físicos do processador'),
-                                            ( '%s', 3, 'Potencia do processador', '%s', 'Potencia do processador'),
                                             ( '%s', 3, 'Numero de CPUs físicas do processador', '%s', 'Numero de CPUs físicas do processador'),
                                             ( '%s', 3, 'Numero de CPUs Logicas do processador', '%s', 'Numero de CPUs Logicas do processador')
                 """.formatted(
@@ -42,8 +41,6 @@ public class ProcessadorCp extends Componente {
                 nomeProcessador,
                 fkMaquina,
                 nmrPacotesFisicosProcessador,
-                fkMaquina,
-                potenciaProcessador,
                 fkMaquina,
                 nmrCpusFisicosProcessador,
                 fkMaquina,

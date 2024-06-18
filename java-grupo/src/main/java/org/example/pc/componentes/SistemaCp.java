@@ -21,7 +21,7 @@ public class SistemaCp extends Componente {
         Looca looca = new Looca();
 
         //            SISTEMA
-        String modeloSistema = looca.getRede().getParametros().getHostName();
+        String modeloSistema = looca.getSistema().getSistemaOperacional();
         Instant inicializadoSistema = looca.getSistema().getInicializado();
 
         String querySistema = """
@@ -60,7 +60,7 @@ public class SistemaCp extends Componente {
 
         Looca looca = new Looca();
 
-        String modeloSistema = looca.getRede().getParametros().getHostName();
+        String modeloSistema = looca.getSistema().getSistemaOperacional();
         Instant inicializadoSistema = looca.getSistema().getInicializado();
 
 

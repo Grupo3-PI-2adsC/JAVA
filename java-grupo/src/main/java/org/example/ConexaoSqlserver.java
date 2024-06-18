@@ -189,9 +189,6 @@ public class ConexaoSqlserver extends Conexao {
             }
         }
             return null;
-
-
-
     }
 
     @Override

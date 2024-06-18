@@ -128,12 +128,14 @@ public class ConexaoMysql extends Conexao {
               MYSQL
                 |
                 |""");
+        Computador computadorMonitorado;
 
         System.out.println("""
                             Verificando se o computador já existe na nossa base de dados
                             .............................................................""");
 
-        JdbcTemplate con = conexaoDoBanco;
+        ConexaoMysql conexao = new ConexaoMysql();
+        JdbcTemplate con = conexao.getConexaoDoBanco();
 
 
         Looca teste = new Looca();
@@ -144,7 +146,6 @@ public class ConexaoMysql extends Conexao {
 
         String sql = String.format("SELECT idMaquina, hostname, ativo, fkEmpresa FROM maquina WHERE hostName = '%s';", hostname);
 
-        Computador computadorMonitorado;
         try {
 
             System.out.println("""
@@ -154,15 +155,13 @@ public class ConexaoMysql extends Conexao {
 
             computadorMonitorado = con.queryForObject(sql,
                     computadorRowMapper);
-
 //        System.out.println(computadorMonitorado + " asdasd");
             System.out.println("""
                     A Maquina em execução existe na base de dados
                     ...............................................""");
 
-            String sqlAtivo = String.format("UPDATE maquina SET ativo = 1 WHERE idMaquina = '%s';", computadorMonitorado.getIdMaquina());
-
-            con.execute(sqlAtivo);
+            String sqlAtivo = "update maquina set ativo = 1 where idMaquina = '%s';".formatted(computadorMonitorado.getIdMaquina());
+            conexao.executarQuery(sqlAtivo);
 //            Computador já tem cadastrado os componentes
             System.out.println("vez:" + vez);
             if (vez == 1){
@@ -177,7 +176,6 @@ public class ConexaoMysql extends Conexao {
                 ............................................""");
 //                o computador acabou de ser cadastrado e ainda não possui componente
 
-
                 computadorMonitorado.cadastrarFixos(servidor);
                 System.out.println("|Dados fixos cadastrados|");
 
@@ -188,7 +186,6 @@ public class ConexaoMysql extends Conexao {
                 return computadorMonitorado2;
 //                computadorMonitorado.buscarInfos(1, servidor);
             }
-
         }catch (Exception erro) {
             System.out.println(erro);
             if (erro.getCause() == null) {
@@ -197,9 +194,13 @@ public class ConexaoMysql extends Conexao {
                                     Computador não existe. Vamos cadastralo agora
                                     ..............................................""");
 
-                String sqlMaquina = String.format(
-                        "INSERT INTO maquina VALUES ('%s', '%s', true, %d, false, %d);",
-                         hostname, hostname, arquitetura, userAtual.getFkEmpresa()
+                String sqlMaquina = "INSERT INTO maquina VALUES ('%s', '%s', %d, %d, %d, %d);".formatted(
+                        hostname,
+                        hostname,
+                        1,
+                        arquitetura,
+                        0,
+                        userAtual.getFkEmpresa()
                 );
 
                 try {
@@ -207,10 +208,12 @@ public class ConexaoMysql extends Conexao {
                     System.out.println("""
                                         Computador Cadastrado com sucesso
                                         ...................................""");
+
                     computadorMonitorado = con.queryForObject(sql, computadorRowMapper);
                     System.out.println("Computador monitorado após cadastro: " + computadorMonitorado);
 
                     return this.computadorExiste(0, servidor, userAtual);
+
                 } catch (Exception erro2) {
                     System.out.println("""
                                           Erro: %s
@@ -218,7 +221,6 @@ public class ConexaoMysql extends Conexao {
                                          .....................""".formatted(erro2, erro2.getCause()));
                 }
             }
-            System.out.println("Aqui???");
         }
             return null;
     }

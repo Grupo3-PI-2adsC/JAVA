@@ -85,7 +85,7 @@ public class Main {
         try {
             Usuario userSqlserver = con.buscarCredenciais(emailLogin, senhaLogin);
             Usuario userMysql = con10.buscarCredenciais(emailLogin, senhaLogin);
-            Computador computador = con10.computadorExiste(3, false, userMysql);
+//            Computador computador = con10.computadorExiste(3, false, userMysql);
 
             try {
 //                con10.buscarCredenciais(emailLogin, senhaLogin);
@@ -95,8 +95,10 @@ public class Main {
                                 ..............................""");
 
 
+                Computador computador = con10.computadorExiste(1, false, userSqlserver);
                 Computador computador1 = con.computadorExiste(1, true, userSqlserver);
-                System.out.println("Main: " + computador1);
+                System.out.println("Main1: " + computador1);
+                System.out.println("Main: " + computador);
 
                 while(true) {
                     try {
@@ -138,5 +140,9 @@ public class Main {
 
     }
 }
-
-//'1', 'recepção', 'Raimunda', 'raimunda@netmet.com', '1234', '1'
+//insert into usuario values
+//        (null, 'representante', 'Raimunda Neto', 'raimunda@netmed.com' ,'Raim@123', 1, 1);
+//insert into usuario values
+//        (null, 'representante', 'Cleiton Olivaras', 'cleiton@netmed.com' ,'Clei@123', 2, 1);
+//insert into usuario values
+//        (null, 'representante', 'Alberto Maverique', 'alberto@netmed.com' ,'Albe@123', 3, 1);
