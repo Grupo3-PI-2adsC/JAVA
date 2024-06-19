@@ -162,11 +162,12 @@ public class ConexaoSqlserver extends Conexao {
 
                 String sqlMaquina = """
                                    INSERT INTO maquina
-                                   (hostName
-                                   ,ativo
-                                   ,arquitetura
-                                   ,validado
-                                   ,fkEmpresa) 
+                                           (idMaquina
+                                           ,hostName
+                                           ,ativo
+                                           ,arquitetura
+                                           ,validado
+                                           ,fkEmpresa)
                                    VALUES ('%s', '%s', %d, %d, %d, %d);""".formatted(
                         hostname,
                         hostname,
