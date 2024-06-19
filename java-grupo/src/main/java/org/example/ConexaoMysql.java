@@ -52,41 +52,30 @@ public class ConexaoMysql extends Conexao {
         this.url = "jdbc:mysql://mysql:3306/netmed"; //mysql-container
         this.username = "Netmed";
         this.password = "Netmed#1@@";
-        configurarDataSource();
-//        try{
-//        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-//        dataSource.setUrl(url);
-//        dataSource.setUsername(username);
-//        dataSource.setPassword(password);
-//        this.conexaoDoBanco = new JdbcTemplate(dataSource);
+//        configurarDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+
+        this.conexaoDoBanco = new JdbcTemplate(dataSource);
+
+    }
+
+//    private void configurarDataSource() {
+//        try {
+//            BasicDataSource dataSource = new BasicDataSource();
+//            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+//            dataSource.setUrl(url);
+//            dataSource.setUsername(username);
+//            dataSource.setPassword(password);
+//            this.conexaoDoBanco = new JdbcTemplate(dataSource);
 //        } catch (Exception e) {
 //            System.err.println("Falha ao conectar ao banco de dados:");
 //            e.printStackTrace();
 //        }
-
-
-        /*
-             Exemplo de string de conexões:
-                jdbc:mysql://localhost:3306/mydb <- EXEMPLO PARA MYSQL
-                jdbc:sqlserver://localhost:1433;database=mydb <- EXEMPLO PARA SQL SERVER
-        */
-
-
-    }
-
-    private void configurarDataSource() {
-        try {
-            BasicDataSource dataSource = new BasicDataSource();
-            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSource.setUrl(url);
-            dataSource.setUsername(username);
-            dataSource.setPassword(password);
-            this.conexaoDoBanco = new JdbcTemplate(dataSource);
-        } catch (Exception e) {
-            System.err.println("Falha ao conectar ao banco de dados:");
-            e.printStackTrace();
-        }
-    }
+//    }
 
     @Override
     public Usuario buscarCredenciais(String email, String senha) {
