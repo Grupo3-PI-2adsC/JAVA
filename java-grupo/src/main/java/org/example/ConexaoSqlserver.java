@@ -37,21 +37,35 @@ public class ConexaoSqlserver extends Conexao {
 
 
     public ConexaoSqlserver() {
-        BasicDataSource dataSource = new BasicDataSource();
+//        BasicDataSource dataSource = new BasicDataSource();
         this.url = "jdbc:sqlserver://184.73.201.251:1433;databaseName=netmed;trustServerCertificate=true";
         this.username = "sa";
         this.password = "urubu100";
+        configurarDataSource();
 
+//        dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//
+//
+//        dataSource.setUrl(url);
+//        dataSource.setUsername(username);
+//        dataSource.setPassword(password);
+//
+//        this.conexaoDoBanco = new JdbcTemplate(dataSource);
 
-        dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+    }
 
-
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-
-        this.conexaoDoBanco = new JdbcTemplate(dataSource);
-
+    private void configurarDataSource() {
+        try {
+            BasicDataSource dataSource = new BasicDataSource();
+            dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            dataSource.setUrl(url);
+            dataSource.setUsername(username);
+            dataSource.setPassword(password);
+            this.conexaoDoBanco = new JdbcTemplate(dataSource);
+        } catch (Exception e) {
+            System.err.println("Falha ao conectar ao banco de dados:");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -160,7 +174,15 @@ public class ConexaoSqlserver extends Conexao {
                                     Computador não existe. Vamos cadastralo agora
                                     ..............................................""");
 
-                String sqlMaquina = "INSERT INTO maquina VALUES ('%s', '%s', %d, %d, %d, %d);".formatted(
+                String sqlMaquina = """
+                                   INSERT INTO maquina
+                                           (idMaquina
+                                           ,hostName
+                                           ,ativo
+                                           ,arquitetura
+                                           ,validado
+                                           ,fkEmpresa)
+                                   VALUES ('%s', '%s', %d, %d, %d, %d);""".formatted(
                         hostname,
                         hostname,
                         1,

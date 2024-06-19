@@ -47,30 +47,19 @@ public class ConexaoMysql extends Conexao {
     }
 
     public ConexaoMysql() {
-        BasicDataSource dataSource = new BasicDataSource();
+//        BasicDataSource dataSource = new BasicDataSource();
 
         this.url = "jdbc:mysql://localhost:3306/netmed"; //mysql-container
         this.username = "Netmed";
         this.password = "Netmed#1@@";
         configurarDataSource();
-//        try{
 //        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+
 //        dataSource.setUrl(url);
 //        dataSource.setUsername(username);
 //        dataSource.setPassword(password);
+//
 //        this.conexaoDoBanco = new JdbcTemplate(dataSource);
-//        } catch (Exception e) {
-//            System.err.println("Falha ao conectar ao banco de dados:");
-//            e.printStackTrace();
-//        }
-
-
-        /*
-             Exemplo de string de conexões:
-                jdbc:mysql://localhost:3306/mydb <- EXEMPLO PARA MYSQL
-                jdbc:sqlserver://localhost:1433;database=mydb <- EXEMPLO PARA SQL SERVER
-        */
-
 
     }
 
@@ -194,7 +183,15 @@ public class ConexaoMysql extends Conexao {
                                     Computador não existe. Vamos cadastralo agora
                                     ..............................................""");
 
-                String sqlMaquina = "INSERT INTO maquina VALUES ('%s', '%s', %d, %d, %d, %d);".formatted(
+                String sqlMaquina = """
+                                   INSERT INTO maquina
+                                           (idMaquina
+                                           ,hostName
+                                           ,ativo
+                                           ,arquitetura
+                                           ,validado
+                                           ,fkEmpresa)
+                                   VALUES ('%s', '%s', %d, %d, %d, %d);""".formatted(
                         hostname,
                         hostname,
                         1,
