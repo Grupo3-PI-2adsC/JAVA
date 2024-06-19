@@ -4,6 +4,7 @@ import com.github.britooo.looca.api.core.Looca;
 import org.example.Conexao;
 import org.example.ConexaoMysql;
 import org.example.ConexaoSqlserver;
+import org.example.SendAlert;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class ProcessadorCp extends Componente {
@@ -74,6 +75,16 @@ public class ProcessadorCp extends Componente {
 
 
             try {
+                String fkEmpresaQuery = """
+                    select fkEmpresa from maquina where idMaquina = '%s'""".formatted(fkMaquina);
+
+                Integer fkEmpresa = con.queryForObject(fkEmpresaQuery, Integer.class);
+
+                String limiteQuery = """
+                select metricaEstabelecida from tipoComponente where idTipoComponente = 3 and fkEmpresa = %d""".formatted(fkEmpresa);
+
+                Double limite = con.queryForObject(limiteQuery, Double.class);
+
                 System.out.println(queryFk);
                 Integer fk = con.queryForObject(queryFk, Integer.class);
                 System.out.println(fk);
@@ -95,6 +106,14 @@ public class ProcessadorCp extends Componente {
 
 
                 conexao.executarQuery(queryMemoria);
+
+                System.out.println("Uso Processaor: " + emUsoProcessador);
+                System.out.println("Limite: " + limite);
+
+                if (emUsoProcessador > limite) { // Exemplo de condição para enviar alerta
+                    System.out.println("ENTREI PROCESSADOR");
+                    SendAlert.sendSlackAlert("Processador", "ModeloX", fkMaquina, "Alto Uso", emUsoProcessador);
+                }
             } catch (Exception erro) {
                 System.out.println(erro);
             }

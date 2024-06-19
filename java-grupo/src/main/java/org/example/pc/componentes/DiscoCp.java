@@ -5,7 +5,10 @@ import com.github.britooo.looca.api.group.discos.Disco;
 import org.example.Conexao;
 import org.example.ConexaoMysql;
 import org.example.ConexaoSqlserver;
+import org.example.SendAlert;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.text.DecimalFormat;
 
 public class DiscoCp extends Componente {
 
@@ -105,8 +108,10 @@ public class DiscoCp extends Componente {
     @Override
     public void buscarInfosVariaveis(Boolean teste) {
 
-
         try {
+
+            String fkEmpresaQuery = """
+                    select fkEmpresa from maquina where idMaquina = '%s'""".formatted(fkMaquina);
 
             String queryFk = """
                     select * from dadosFixos where fkMaquina = '%s' and fkTipoComponente = 5 and nomeCampo = 'Nome do disco'""".formatted(fkMaquina);
@@ -119,8 +124,17 @@ public class DiscoCp extends Componente {
                     System.out.println(fk);
                     Looca looca = new Looca();
 
-                    Long leiturasDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getLeituras());
+                    Integer fkEmpresa = con1.queryForObject(fkEmpresaQuery, Integer.class);
+
+                    String limiteQuery = """
+                        select metricaEstabelecida from tipoComponente where idTipoComponente = 5 and fkEmpresa = %d""".formatted(fkEmpresa);
+
+                    Double limite = con1.queryForObject(limiteQuery, Double.class);
+
+
+//                    Long leiturasDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getLeituras());
                     Long escritarDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getEscritas());
+                    Double leiturasDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getBytesDeLeitura() / (double) looca.getGrupoDeDiscos().getDiscos().get(0).getTamanho()) * 100;
 
                     var queryDisco = """
                                  iNSERT INTO dadosTempoReal(
@@ -143,6 +157,13 @@ public class DiscoCp extends Componente {
 //                System.out.println(queryDisco);
                     conexao1.executarQuery(queryDisco);
 
+                    System.out.println("Limite !!!!!!!!! " + limite);
+                    System.out.println("Leituras de Disco: " + leiturasDisco);
+                    System.out.println("Limite: " + limite);
+                    if (leiturasDisco > limite) { // Exemplo de condição para enviar alerta
+                        System.out.println("ENTREII");
+                        SendAlert.sendSlackAlert("Disco", "ModeloX", fkMaquina, "Alto Uso", leiturasDisco);
+                    }
 
                     while (resultSet.next()) {
 //                        String fk = resultSet.getString("valorCampo");
@@ -158,7 +179,7 @@ public class DiscoCp extends Componente {
                                                   ,dataHora
                                                   ,nomeCampo
                                                   ,valorCampo)  VALUES
-                                                  ( %d, '%s', 5, current_timestamp,'Leituras', '%s'),
+                                                  ( %d, '%s', 5, current_timestamp,'Leituras', %.2f),
                                                                     ( %d, '%s', 5, current_timestamp,'Leituras', '%s');
                                         """.formatted(
                                         fk,
@@ -181,13 +202,17 @@ public class DiscoCp extends Componente {
 
                 ConexaoMysql conexao = new ConexaoMysql();
                 JdbcTemplate con = conexao.getConexaoDoBanco();
+
+//                limite = con.queryForObject(limiteQuery, Double.class);
                 con.query(queryFk, (resultSet) -> {
                     Integer fk = resultSet.getInt("idDadosFixos");
                     System.out.println(fk);
                     Looca looca = new Looca();
 
-                    Long leiturasDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getLeituras());
+
+//                    Long leiturasDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getLeituras());
                     Long escritarDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getEscritas());
+                    Double leiturasDisco = (looca.getGrupoDeDiscos().getDiscos().get(0).getBytesDeLeitura() / (double) looca.getGrupoDeDiscos().getDiscos().get(0).getTamanho()) * 100;
 
                     var queryDisco = """
                             iNSERT INTO dadosTempoReal(
@@ -197,7 +222,7 @@ public class DiscoCp extends Componente {
                              ,dataHora
                              ,nomeCampo
                              ,valorCampo)
-                                                       VALUES  ( %d, '%s', 5, current_timestamp(),'Leituras', '%s'),
+                                                       VALUES  ( %d, '%s', 5, current_timestamp(),'Leituras', %.2f),
                                                                ( %d, '%s', 5, current_timestamp(),'Escritas', '%s');
                                    """.formatted(
                             fk,
@@ -209,8 +234,6 @@ public class DiscoCp extends Componente {
                     );
 //                System.out.println(queryDisco);
                     conexao.executarQuery(queryDisco);
-
-
 
                     while (resultSet.next()){
 //                        String fk = resultSet.getString("valorCampo");
@@ -226,7 +249,7 @@ public class DiscoCp extends Componente {
                              ,dataHora
                              ,nomeCampo
                              ,valorCampo)
-                                                       VALUES  ( %d, '%s', 5, current_timestamp(),'Leituras', '%s'),
+                                                       VALUES  ( %d, '%s', 5, current_timestamp(),'Leituras', %.2f),
                                                                ( %d, '%s', 5, current_timestamp(),'Escritas', '%s');
                                            """.formatted(
                                         fk,

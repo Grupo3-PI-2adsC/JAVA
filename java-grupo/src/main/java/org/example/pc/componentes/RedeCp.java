@@ -4,6 +4,7 @@ import com.github.britooo.looca.api.core.Looca;
 import org.example.Conexao;
 import org.example.ConexaoMysql;
 import org.example.ConexaoSqlserver;
+import org.example.SendAlert;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -77,6 +78,12 @@ public class RedeCp extends Componente {
         Looca looca = new Looca();
         Long pacotesRecebidosRede = (looca.getRede().getGrupoDeInterfaces().getInterfaces().get(0).getPacotesRecebidos());
         Long pacotesEnviadosRede = (looca.getRede().getGrupoDeInterfaces().getInterfaces().get(0).getPacotesEnviados());
+
+        System.out.println("Pacotes Recebidos (Long): " + pacotesRecebidosRede);
+        System.out.println("Pacotes Enviados (Long): " + pacotesEnviadosRede);
+
+        Double valorPacotesRecebidosDouble = pacotesRecebidosRede.doubleValue();
+        Double valorPacotesEnviadosDouble = pacotesEnviadosRede.doubleValue();
             String queryFk = """
                         select idFixosRede from fixosRede where fkMaquina = '%s' and nomeCampo = '%s'""".formatted(fkMaquina, "hostname da rede");
 
@@ -87,6 +94,15 @@ public class RedeCp extends Componente {
 
             String host = looca.getRede().getParametros().getHostName();
             try {
+                String fkEmpresaQuery = """
+                    select fkEmpresa from maquina where idMaquina = '%s'""".formatted(fkMaquina);
+
+                Integer fkEmpresa = con.queryForObject(fkEmpresaQuery, Integer.class);
+
+                String limiteQuery = """
+                select metricaEstabelecida from tipoComponente where idTipoComponente = 3 and fkEmpresa = %d""".formatted(fkEmpresa);
+
+                Double limite = con.queryForObject(limiteQuery, Double.class);
 
                 System.out.println(queryFk);
                 Integer fk = con.queryForObject(queryFk, Integer.class);
@@ -111,6 +127,14 @@ public class RedeCp extends Componente {
                         pacotesEnviadosRede
                 );
                 conexao.executarQuery(queryRede);
+
+                System.out.println("Enviados: "+ valorPacotesEnviadosDouble);
+                System.out.println("Recebidos: "+ valorPacotesRecebidosDouble);
+                System.out.println("Limite: "+ limite);
+                if (valorPacotesRecebidosDouble > limite || valorPacotesEnviadosDouble > limite) {
+                    System.out.println("ENTREI -- REDE");
+                    SendAlert.sendSlackAlert("Rede", "ModeloY", fkMaquina, "Alto tráfego de pacotes", Math.max(valorPacotesRecebidosDouble, valorPacotesEnviadosDouble));
+                }
             } catch (Exception erro) {
                 System.out.println(erro);
             }

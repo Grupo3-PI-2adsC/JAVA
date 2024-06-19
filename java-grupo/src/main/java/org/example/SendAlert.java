@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 public class SendAlert {
 
-    private static final String WEBHOOK_URL = "https://hooks.slack.com/services/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";
+    private static final String WEBHOOK_URL = "https://hooks.slack.com/services/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";
 
     public static void sendSlackAlert(String componente, String modelo, String hostname, String status, Double uso) {
         var logger = LoggerFactory.getLogger("slack-alert-service");

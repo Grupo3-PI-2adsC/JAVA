@@ -3,6 +3,7 @@ import com.github.britooo.looca.api.core.Looca;
 import org.example.Conexao;
 import org.example.ConexaoMysql;
 import org.example.ConexaoSqlserver;
+import org.example.SendAlert;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class RamCp extends Componente {
@@ -61,6 +62,16 @@ public class RamCp extends Componente {
             JdbcTemplate con = conexao.getConexaoDoBanco();
 
             try {
+                String fkEmpresaQuery = """
+                    select fkEmpresa from maquina where idMaquina = '%s'""".formatted(fkMaquina);
+
+                Integer fkEmpresa = con.queryForObject(fkEmpresaQuery, Integer.class);
+
+                String limiteQuery = """
+                select metricaEstabelecida from tipoComponente where idTipoComponente = 3 and fkEmpresa = %d""".formatted(fkEmpresa);
+
+                Double limite = con.queryForObject(limiteQuery, Double.class);
+
                 String queryFk = """
                         select idDadosFixos from dadosFixos where fkMaquina = '%s' and fkTipoComponente = 2 and nomeCampo = 'total de memoria do computador'""".formatted(fkMaquina);
                 System.out.println(queryFk);
@@ -84,6 +95,13 @@ public class RamCp extends Componente {
                 );
 
                 conexao.executarQuery(queryMemoria);
+
+                System.out.println("Memoria: "+ emUsoMemoria);
+                System.out.println("Limite: "+ limite);
+                if (emUsoMemoria > limite) { // Exemplo de condição para enviar alerta
+                    System.out.println("ENTREI RAM");
+                    SendAlert.sendSlackAlert("Memória RAM", "ModeloX", fkMaquina, "Alto Uso", emUsoMemoria.doubleValue());
+                }
 
             } catch (Exception erro) {
                 System.out.println(erro);
