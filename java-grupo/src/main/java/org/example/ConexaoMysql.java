@@ -183,7 +183,14 @@ public class ConexaoMysql extends Conexao {
                                     Computador não existe. Vamos cadastralo agora
                                     ..............................................""");
 
-                String sqlMaquina = "INSERT INTO maquina VALUES ('%s', '%s', %d, %d, %d, %d);".formatted(
+                String sqlMaquina = """
+                                   INSERT INTO maquina
+                                   (hostName
+                                   ,ativo
+                                   ,arquitetura
+                                   ,validado
+                                   ,fkEmpresa) 
+                                   VALUES ('%s', '%s', %d, %d, %d, %d);""".formatted(
                         hostname,
                         hostname,
                         1,
