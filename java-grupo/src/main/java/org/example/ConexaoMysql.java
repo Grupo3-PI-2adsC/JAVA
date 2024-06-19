@@ -49,7 +49,7 @@ public class ConexaoMysql extends Conexao {
     public ConexaoMysql() {
         BasicDataSource dataSource = new BasicDataSource();
 
-        this.url = "jdbc:mysql://localhost:3306/netmed"; //mysql-container
+        this.url = "jdbc:mysql://mysql:3306/netmed"; //mysql-container
         this.username = "Netmed";
         this.password = "Netmed#1@@";
         configurarDataSource();
